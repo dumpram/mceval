@@ -9,7 +9,7 @@ can be seen in results directory. We implemented following schedulability tests:
 
 **EDF-VD** implementation is based on:
 
-*Sanjoy K. Baruah, Vincenzo Bonifaci, Gianlorenzo D'Angelo, Alberto Marchetti-Spaccamela, Suzanne Van Der Ster, and Leen Stougie. 2011. Mixed-criticality scheduling of sporadic task systems. In Proceedings of the 19th European conference on Algorithms (ESA'11), Camil Demetrescu and Magnús M. Halldórsson (Eds.). Springer-Verlag, Berlin, Heidelberg, 555-566. *
+*Sanjoy K. Baruah, Vincenzo Bonifaci, Gianlorenzo D'Angelo, Alberto Marchetti-Spaccamela, Suzanne Van Der Ster, and Leen Stougie. 2011. Mixed-criticality scheduling of sporadic task systems. In Proceedings of the 19th European conference on Algorithms (ESA'11), Camil Demetrescu and Magnús M. Halldórsson (Eds.). Springer-Verlag, Berlin, Heidelberg, 555-566.*
 
 **EkbergGreedy** implementation is based on:
 
