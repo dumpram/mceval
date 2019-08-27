@@ -21,5 +21,5 @@ can be seen in results directory. We implemented following schedulability tests:
 
 ## Regenerate results
 
-Run run.sh script. It starts SchedulabiltiyTest class. Generates 100 task set with 6 for each utilization with. Increasing
+Run run.sh script. It starts SchedulabiltiyTest class. Generates 100 task sets with 6 tasks for each utilization. Increasing
 number of tasks increases execution time of exact exponentially. Therefore, evaluation can take some time with larger task sets.
