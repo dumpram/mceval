@@ -36,7 +36,6 @@ public class PriorityAssignmentOPA implements IPriorityAssignment {
 		for (int j = n - 1; j >= 0; j--) {
 			unassigned = true;
 			for (int i = 0; i < j + 1; i++) {
-				System.out.println("i = " + i);
 				forExport.reorder(i, j);
 				if (testOPA(i, j, forExport, responseTime) && unassigned) {
 					unassigned = false;

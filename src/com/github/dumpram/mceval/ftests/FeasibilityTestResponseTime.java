@@ -1,14 +1,14 @@
-package com.github.dumpram.mceval.rtimes;
+package com.github.dumpram.mceval.ftests;
 
 import com.github.dumpram.mceval.interfaces.IFeasibilityTest;
 import com.github.dumpram.mceval.interfaces.IResponseTime;
 import com.github.dumpram.mceval.models.MCTaskSet;
 
-public class ResponseTimeFeasibilityTest implements IFeasibilityTest {
+public class FeasibilityTestResponseTime implements IFeasibilityTest {
 
 	private IResponseTime responseTime;
 
-	public ResponseTimeFeasibilityTest(IResponseTime responseTime) {
+	public FeasibilityTestResponseTime(IResponseTime responseTime) {
 		this.responseTime = responseTime;
 	}
 

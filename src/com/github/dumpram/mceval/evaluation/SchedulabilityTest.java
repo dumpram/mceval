@@ -11,11 +11,12 @@ import com.github.dumpram.mceval.assignments.PriorityAssignmentOPA;
 import com.github.dumpram.mceval.ftests.FeasibilityTestEDFWithVD;
 import com.github.dumpram.mceval.ftests.FeasibilityTestEfficientExact;
 import com.github.dumpram.mceval.ftests.FeasibilityTestEkbergGreedy;
+import com.github.dumpram.mceval.ftests.FeasibilityTestResponseTime;
 import com.github.dumpram.mceval.ftests.FeasibilityTestUBHL;
 import com.github.dumpram.mceval.models.MCTaskSet;
+import com.github.dumpram.mceval.rtimes.ResponseTimeAMCTight;
 import com.github.dumpram.mceval.rtimes.ResponseTimeAMCmax;
 import com.github.dumpram.mceval.rtimes.ResponseTimeAMCrtb;
-import com.github.dumpram.mceval.rtimes.ResponseTimeFeasibilityTest;
 import com.github.dumpram.mceval.taskgen.UUniFastDiscard;
 import com.github.sh0nk.matplotlib4j.NumpyUtils;
 import com.github.sh0nk.matplotlib4j.Plot;
@@ -23,17 +24,18 @@ import com.github.sh0nk.matplotlib4j.PythonExecutionException;
 
 public class SchedulabilityTest {
 
-	static List<TestPair> tests = new ArrayList<TestPair>();
+	static List<TestItem> tests = new ArrayList<TestItem>();
 
 	static {
-		tests.add(new TestPair(new FeasibilityTestUBHL(), new PriorityAssignmentDM()));
-		tests.add(new TestPair(new ResponseTimeFeasibilityTest(new ResponseTimeAMCmax()),
+		tests.add(new TestItem(new FeasibilityTestUBHL(), new PriorityAssignmentDM()));
+		tests.add(new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCmax()),
 				new PriorityAssignmentOPA(new ResponseTimeAMCmax())));
-		tests.add(new TestPair(new FeasibilityTestEkbergGreedy(), new PriorityAssignmentDynamic()));
-		tests.add(new TestPair(new FeasibilityTestEDFWithVD(), new PriorityAssignmentDynamic()));
-		tests.add(new TestPair(new ResponseTimeFeasibilityTest(new ResponseTimeAMCrtb()),
+		tests.add(new TestItem(new FeasibilityTestEkbergGreedy(), new PriorityAssignmentDynamic()));
+		tests.add(new TestItem(new FeasibilityTestEDFWithVD(), new PriorityAssignmentDynamic()));
+		tests.add(new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCrtb()),
 				new PriorityAssignmentOPA(new ResponseTimeAMCrtb())));
-		tests.add(new TestPair(new FeasibilityTestEfficientExact(), new PriorityAssignmentNOPA()));
+		tests.add(new TestItem(new FeasibilityTestEfficientExact(), new PriorityAssignmentNOPA()));
+		tests.add(new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCTight()), new PriorityAssignmentNOPA()));
 	}
 
 	public static void main(String[] args) throws IOException, PythonExecutionException {
@@ -69,13 +71,14 @@ public class SchedulabilityTest {
 
 		Plot plt = Plot.create();
 		List<List<Double>> scores = new ArrayList<List<Double>>();
-		for (TestPair test : tests) {
+		for (TestItem test : tests) {
 			List<Double> current = new ArrayList<Double>();
 			for (List<MCTaskSet> _sets : sets) {
 				double cnt = 0;
 				for (MCTaskSet set : _sets) {
 					if (test.feasibilityTest.isFeasible(test.priorityAssignment.assign(set))) {
 						cnt++;
+						test.schedulableSets.add(set);
 					}
 				}
 				current.add(cnt);
@@ -83,9 +86,11 @@ public class SchedulabilityTest {
 			scores.add(current);
 			plt.plot().add(utils, current).label(test.toString());
 		}
+		
 		plt.legend();
 		plt.show();
-
+		
+		
 	}
 
 }
