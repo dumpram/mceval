@@ -299,6 +299,42 @@ public class ValidityTests {
 		assertTrue(amctight.score() <= exact.score() && amctight.score() <= ubhl.score());
 		assertTrue(exact.score() <= ubhl.score());
 	}
+	
+	@Test
+	public void testDominanceWithTheBestAssignmentConstrainedWithLargerPeriods() {
+		List<TestItem> tests = new ArrayList<TestItem>();
+		TestItem ubhl = new TestItem(new FeasibilityTestUBHL(), new PriorityAssignmentDM());
+		TestItem amcmax = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCmax()), new PriorityAssignmentOPA(new
+				ResponseTimeAMCmax()));
+		TestItem exact = new TestItem(new FeasibilityTestEfficientExact(), new PriorityAssignmentNOPA());
+		TestItem amctight = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCTight()),
+				new PriorityAssignmentNOPA());
+		tests.add(ubhl);
+		tests.add(amcmax);
+		tests.add(exact);
+		tests.add(amctight);
+
+		double minimumUtilization = 0.1;
+		double maximumUtilization = 0.9;
+		double utilizationIncrement = 0.05;
+		int n = 4;
+		int nsets = 1000;
+		int tmin = 10;
+		int tmax = 1000;
+		int criticality = 2;
+		int DC = 2;
+		int CF = 2;
+		double CP = 0.5;
+		double delta = utilizationIncrement / 2;
+		boolean fixed = true;
+
+		TestUtils.runTest(tests, minimumUtilization, maximumUtilization, utilizationIncrement, n, nsets, tmin, tmax, criticality,
+				DC, CF, CP, delta, fixed);
+		
+		assertTrue(amcmax.score() <= amctight.score() && amcmax.score() <= exact.score() && amcmax.score() <= ubhl.score());
+		assertTrue(amctight.score() <= exact.score() && amctight.score() <= ubhl.score());
+		assertTrue(exact.score() <= ubhl.score());
+	}
 
 
 

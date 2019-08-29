@@ -7,7 +7,7 @@ import com.github.dumpram.mceval.interfaces.IResponseTime;
 import com.github.dumpram.mceval.models.MCTask;
 import com.github.dumpram.mceval.models.MCTaskSet;
 
-public class ResponseTimeAMCTight implements IResponseTime {
+public class ResponseTimeAMCTight2 implements IResponseTime {
 
 	private IResponseTime responseTimeHI = new ResponseTimeHI();
 
@@ -59,7 +59,7 @@ public class ResponseTimeAMCTight implements IResponseTime {
 									t += ((int) Math.floor(1.0 * s / TJ) + 1) * CLO;
 								}
 								if (ss < j && LJ == 0 && s != 0) {
-									t -= CLO;
+									t --;
 								} 
 								if (j < ss && LJ == 1) {
 									int m = getm(TJ, DJ, s, R);

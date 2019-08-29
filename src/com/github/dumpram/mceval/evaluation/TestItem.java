@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.github.dumpram.mceval.interfaces.IFeasibilityTest;
 import com.github.dumpram.mceval.interfaces.IPriorityAssignment;
+import com.github.dumpram.mceval.interfaces.IResponseTime;
 import com.github.dumpram.mceval.models.MCTaskSet;
 
 public class TestItem {
@@ -14,11 +15,19 @@ public class TestItem {
 	public IPriorityAssignment priorityAssignment;
 	
 	public List<MCTaskSet> schedulableSets = new ArrayList<MCTaskSet>();
+	
+	public List<List<Integer>> responseTimes = new ArrayList<List<Integer>>();
 
+	public IResponseTime responseTime;
+	
 	public TestItem(IFeasibilityTest feasibilityTest, IPriorityAssignment priorityAssignment) {
 		super();
 		this.feasibilityTest = feasibilityTest;
 		this.priorityAssignment = priorityAssignment;
+	}
+	
+	public TestItem(IResponseTime responseTime) {
+		this.responseTime = responseTime;
 	}
 	
 	public int score() {
