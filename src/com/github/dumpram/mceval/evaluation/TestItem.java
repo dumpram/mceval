@@ -16,7 +16,7 @@ public class TestItem {
 	
 	public List<MCTaskSet> schedulableSets = new ArrayList<MCTaskSet>();
 	
-	public List<List<Integer>> responseTimes = new ArrayList<List<Integer>>();
+	public List<MCTaskSetResult> setResults = new ArrayList<MCTaskSetResult>();
 
 	public IResponseTime responseTime;
 	

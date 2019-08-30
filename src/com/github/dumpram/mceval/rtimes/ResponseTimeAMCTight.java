@@ -30,12 +30,18 @@ public class ResponseTimeAMCTight implements IResponseTime {
 		if (L == 0 || R_lo > D) {
 			return R_lo;
 		}
+		
+		Rmax = R_lo;
 
 		int R_hi = responseTimeHI.responseTime(i, set);
 		if (R_hi > D) {
 			return R_hi;
 		}
-		Rmax = C;
+		
+		if (R_hi > R_lo) {
+			Rmax = R_hi;
+		}
+		
 		List<Integer> S = getS(i, set, R_lo);
 		if (!S.isEmpty()) {
 			for (int ss = 0; ss < n; ss++) {
@@ -58,8 +64,8 @@ public class ResponseTimeAMCTight implements IResponseTime {
 								if (LJ == 0) {
 									t += ((int) Math.floor(1.0 * s / TJ) + 1) * CLO;
 								}
-								if (ss < j && LJ == 0 && s != 0) {
-									t -= CLO;
+								if (ss < j && LJ == 0 /**&& s != 0**/) {
+									t-=CLO;
 								} 
 								if (j < ss && LJ == 1) {
 									int m = getm(TJ, DJ, s, R);
@@ -80,11 +86,6 @@ public class ResponseTimeAMCTight implements IResponseTime {
 			}
 		}
 		
-		if (Rmax < R_lo) {
-			Rmax = R_lo;
-		} else if (Rmax < R_hi) {
-			Rmax = R_hi;
-		}
 		return Rmax;
 	}
 

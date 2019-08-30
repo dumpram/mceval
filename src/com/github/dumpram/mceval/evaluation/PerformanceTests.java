@@ -42,7 +42,7 @@ public class PerformanceTests {
 		double minimumUtilization = 0.5;
 		double maximumUtilization = 0.9;
 		double utilizationIncrement = 0.1;
-		int n = 6;
+		int n = 5;
 		int nsets = 10000;
 		int tmin = 1;
 		int tmax = 50;

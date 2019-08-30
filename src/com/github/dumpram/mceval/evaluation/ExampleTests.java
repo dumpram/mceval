@@ -109,5 +109,35 @@ public class ExampleTests {
 		}
 		
 	}
+	
+	@Test
+	public void CounterExample2() {
+		List<MCTask> tasks = new ArrayList<MCTask>();
+
+		tasks.add(new MCTask(new int[] { 5, 10 }, 13, new int[] { 13, 13 }, 1)); 
+		tasks.add(new MCTask(new int[] { 1, 2 }, 12, new int[] { 12, 12 }, 1)); 
+		tasks.add(new MCTask(new int[] { 1, 2 }, 14, new int[] { 14, 14 }, 0)); 
+
+
+		MCTaskSet set = new MCTaskSet(tasks);
+
+		List<TestItem> tests = new ArrayList<TestItem>();
+		TestItem ubhl = new TestItem(new FeasibilityTestUBHL(), new PriorityAssignmentDM());
+		TestItem amcmax = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCmax()), new PriorityAssignmentOPA(new
+				ResponseTimeAMCmax()));
+		TestItem exact = new TestItem(new FeasibilityTestEfficientExact(), new PriorityAssignmentNOPA());
+		TestItem amctight = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCTight()),
+				new PriorityAssignmentNOPA());
+		
+		tests.add(ubhl);
+		tests.add(amcmax);
+		tests.add(exact);
+		tests.add(amctight);
+		
+		for (TestItem test : tests) {
+			System.out.println(test.feasibilityTest.toString() + " " + test.feasibilityTest.isFeasible(set));
+		}
+		
+	}
 
 }
