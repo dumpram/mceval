@@ -15,6 +15,7 @@ import com.github.dumpram.mceval.models.MCTask;
 import com.github.dumpram.mceval.models.MCTaskSet;
 import com.github.dumpram.mceval.rtimes.ResponseTimeAMCTight;
 import com.github.dumpram.mceval.rtimes.ResponseTimeAMCmax;
+import com.github.dumpram.mceval.rtimes.ResponseTimeExactPeriodic;
 
 public class ExampleTests {
 
@@ -128,11 +129,14 @@ public class ExampleTests {
 		TestItem exact = new TestItem(new FeasibilityTestEfficientExact(), new PriorityAssignmentNOPA());
 		TestItem amctight = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCTight()),
 				new PriorityAssignmentNOPA());
+		TestItem exactperiodic = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeExactPeriodic()),
+				new PriorityAssignmentNOPA());
 		
 		tests.add(ubhl);
 		tests.add(amcmax);
 		tests.add(exact);
 		tests.add(amctight);
+		tests.add(exactperiodic);
 		
 		for (TestItem test : tests) {
 			System.out.println(test.feasibilityTest.toString() + " " + test.feasibilityTest.isFeasible(set));
