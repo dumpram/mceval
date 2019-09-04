@@ -17,6 +17,7 @@ import com.github.dumpram.mceval.models.MCTaskSet;
 import com.github.dumpram.mceval.rtimes.ResponseTimeAMCTight;
 import com.github.dumpram.mceval.rtimes.ResponseTimeAMCmax;
 import com.github.dumpram.mceval.rtimes.ResponseTimeAMCrtb;
+import com.github.dumpram.mceval.rtimes.ResponseTimePeriodic;
 import com.github.dumpram.mceval.taskgen.UUniFastDiscard;
 import com.github.sh0nk.matplotlib4j.NumpyUtils;
 import com.github.sh0nk.matplotlib4j.Plot;
@@ -36,6 +37,7 @@ public class SchedulabilityTest {
 				new PriorityAssignmentOPA(new ResponseTimeAMCrtb())));
 		tests.add(new TestItem(new FeasibilityTestEfficientExact(), new PriorityAssignmentNOPA()));
 		tests.add(new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCTight()), new PriorityAssignmentNOPA()));
+		tests.add(new TestItem(new FeasibilityTestResponseTime(new ResponseTimePeriodic()), new PriorityAssignmentNOPA()));
 	}
 
 	public static void main(String[] args) throws IOException, PythonExecutionException {

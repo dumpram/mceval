@@ -25,7 +25,7 @@ public class TestUtils {
 			for (List<MCTaskSet> _sets : sets) {
 				double cnt = 0;
 				for (MCTaskSet set : _sets) {
-					if (test.feasibilityTest.isFeasible(test.priorityAssignment.assign(set))) {
+					if (test.testFeasibility(test.priorityAssignment.assign(set))) {
 						cnt++;
 						test.schedulableSets.add(set);
 					}

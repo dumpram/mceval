@@ -14,8 +14,8 @@ public class TaskState {
 
 	public TaskState(int i, int j, int k, int l) {
 		c = i;
-		q = j;
-		p = k;
+		p = j;
+		q = k;
 		e = l;
 		phi = 0;
 	}
