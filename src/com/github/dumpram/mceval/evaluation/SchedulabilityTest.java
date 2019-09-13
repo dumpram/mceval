@@ -41,7 +41,7 @@ public class SchedulabilityTest {
 	}
 
 	public static void main(String[] args) throws IOException, PythonExecutionException {
-		double minimumUtilization = 0.0;
+		double minimumUtilization = 0.1;
 		double maximumUtilization = 0.9;
 		double utilizationIncrement = 0.05;
 		int n = 6;

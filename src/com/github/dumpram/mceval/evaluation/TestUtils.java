@@ -42,6 +42,7 @@ public class TestUtils {
 
 		return plt;
 	}
+
 	
 	public static void runTestResponseTime(List<TestItem> tests, double minimumUtilization, double maximumUtilization,
 			double utilizationIncrement, int n, int nsets, int tmin, int tmax, int criticality, int DC, int CF,
@@ -67,7 +68,7 @@ public class TestUtils {
 		}
 	}
 
-	private static void generateSets(int n, int nsets, int tmin, int tmax, int criticality, int DC, int CF, double CP,
+	public static void generateSets(int n, int nsets, int tmin, int tmax, int criticality, int DC, int CF, double CP,
 			double delta, boolean fixed, List<List<MCTaskSet>> sets, List<Double> utils) {
 		for (double u : utils) {
 			List<MCTaskSet> generated = new ArrayList<MCTaskSet>();

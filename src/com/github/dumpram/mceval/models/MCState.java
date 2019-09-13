@@ -10,6 +10,8 @@ public class MCState {
 	
 	public List<TaskState> taskStates;
 
+	public int tardiness = 0;
+
 	public MCState(int t, int _gamma, List<TaskState> taskStates) {
 		gamma = _gamma;
 		this.t = t;
