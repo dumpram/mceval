@@ -1,5 +1,7 @@
 package com.github.dumpram.mceval.misc;
 
+import java.util.List;
+
 public class MiscFunctions {
 	
 	public static long gcd(long a, long b)
@@ -29,6 +31,12 @@ public class MiscFunctions {
 	{
 	    long result = periods[0];
 	    for(int i = 1; i < periods.length; i++) result = lcm(result, periods[i]);
+	    return result;
+	}
+
+	public static long lcm(List<Integer> periods) {
+		long result = periods.get(0);
+	    for(int i = 1; i < periods.size(); i++) result = lcm(result, periods.get(i));
 	    return result;
 	}
 

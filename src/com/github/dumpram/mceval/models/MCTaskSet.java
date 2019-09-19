@@ -7,10 +7,27 @@ import com.github.dumpram.mceval.misc.MiscFunctions;
 public class MCTaskSet {
 	
 	private List<MCTask> tasks;
+	
+	private int[] periods;
+	
+	private long hyperperiod;
 
 	public MCTaskSet(List<MCTask> tasks) {
 		super();
 		this.tasks = tasks;
+		periods = new int[tasks.size()];
+		for (int i = 0; i < tasks.size(); i++) {
+			periods[i] = tasks.get(i).getT();
+		}
+		
+		int maxD = 0;
+		for (int i = 0; i < tasks.size(); i++) {
+			int tmp = tasks.get(i).getD(0);
+			if (tmp > maxD) {
+				maxD = tmp;
+			}
+		}
+		this.hyperperiod = MiscFunctions.lcm(periods) + maxD;
 	}
 
 	public List<MCTask> getTasks() {
@@ -121,6 +138,10 @@ public class MCTaskSet {
 		} else {
 			return Long.min(hyperperiod + maxD, (long)(max * u / (1 - u)));
 		}
+	}
+	
+	public long hyperperiod() {
+		return hyperperiod;
 	}
 	
 	public void reorder(int taskIndex, int priorityLevel) {

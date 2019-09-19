@@ -69,12 +69,12 @@ public class TestUtils {
 	}
 
 	public static void generateSets(int n, int nsets, int tmin, int tmax, int criticality, int DC, int CF, double CP,
-			double delta, boolean fixed, List<List<MCTaskSet>> sets, List<Double> utils) {
+			double delta, boolean fixed, int hyperperiodlimit, List<List<MCTaskSet>> sets, List<Double> utils) {
 		for (double u : utils) {
 			List<MCTaskSet> generated = new ArrayList<MCTaskSet>();
 			while (generated.size() < nsets) {
 				List<MCTaskSet> newOnes = UUniFastDiscard.generate(u, n, nsets - generated.size(), tmin, tmax,
-						criticality, DC, CF, CP, delta, fixed);
+						criticality, DC, CF, CP, delta, fixed, hyperperiodlimit);
 				for (MCTaskSet set : newOnes) {
 					if (!generated.contains(set)) {
 						generated.add(set);
@@ -85,5 +85,10 @@ public class TestUtils {
 			}
 			sets.add(generated);
 		}
+	}
+	
+	public static void generateSets(int n, int nsets, int tmin, int tmax, int criticality, int DC, int CF, double CP,
+			double delta, boolean fixed, List<List<MCTaskSet>> sets, List<Double> utils) {
+		generateSets(n, nsets, tmin, tmax, criticality, DC, CF, CP, delta, fixed, Integer.MAX_VALUE, sets, utils);
 	}
 }
