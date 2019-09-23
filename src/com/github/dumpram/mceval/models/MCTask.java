@@ -18,7 +18,9 @@ public class MCTask {
 		C = c;
 		T = t;
 		D = new int[c.length];
-		D[D.length - 1] = d;
+		for (int i = 0; i < D.length; i++) {
+			D[i] = d;
+		}
 		L = l;
 	}
 	

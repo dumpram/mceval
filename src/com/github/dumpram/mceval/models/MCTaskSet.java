@@ -11,6 +11,8 @@ public class MCTaskSet {
 	private int[] periods;
 	
 	private long hyperperiod;
+	
+	private double averageWCET = 0;
 
 	public MCTaskSet(List<MCTask> tasks) {
 		super();
@@ -26,7 +28,9 @@ public class MCTaskSet {
 			if (tmp > maxD) {
 				maxD = tmp;
 			}
+			averageWCET += tasks.get(i).getWCET(1);
 		}
+		averageWCET /= tasks.size();
 		this.hyperperiod = MiscFunctions.lcm(periods) + maxD;
 	}
 
@@ -148,6 +152,10 @@ public class MCTaskSet {
 		MCTask tmp = tasks.get(taskIndex);
 		tasks.set(taskIndex, tasks.get(priorityLevel));
 		tasks.set(priorityLevel, tmp);
+	}
+	
+	public double getAverageWCET() {
+		return averageWCET;
 	}
 	
 	@Override
