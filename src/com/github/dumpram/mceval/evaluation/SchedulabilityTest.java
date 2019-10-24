@@ -35,15 +35,18 @@ public class SchedulabilityTest {
 		tests.add(new TestItem(new FeasibilityTestEDFWithVD(), new PriorityAssignmentDynamic()));
 		tests.add(new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCrtb()),
 				new PriorityAssignmentOPA(new ResponseTimeAMCrtb())));
-		tests.add(new TestItem(new FeasibilityTestEfficientExact(), new PriorityAssignmentNOPA()));
-		tests.add(new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCTight()), new PriorityAssignmentNOPA()));
-		tests.add(new TestItem(new FeasibilityTestResponseTime(new ResponseTimePeriodic()), new PriorityAssignmentNOPA()));
+		// tests.add(new TestItem(new FeasibilityTestEfficientExact(), new
+		// PriorityAssignmentNOPA()));
+		// tests.add(new TestItem(new FeasibilityTestResponseTime(new
+		// ResponseTimeAMCTight()), new PriorityAssignmentNOPA()));
+		// tests.add(new TestItem(new FeasibilityTestResponseTime(new
+		// ResponseTimePeriodic()), new PriorityAssignmentNOPA()));
 	}
 
 	public static void main(String[] args) throws IOException, PythonExecutionException {
-		double minimumUtilization = 0.1;
+		double minimumUtilization = 0.5;
 		double maximumUtilization = 0.9;
-		double utilizationIncrement = 0.05;
+		double utilizationIncrement = 0.1;
 		int n = 6;
 		int nsets = 100;
 		int tmin = 10;
@@ -57,19 +60,8 @@ public class SchedulabilityTest {
 
 		List<Double> utils = NumpyUtils.arange(minimumUtilization, maximumUtilization, utilizationIncrement);
 		List<List<MCTaskSet>> sets = new ArrayList<List<MCTaskSet>>();
-		for (double u : utils) {
-			List<MCTaskSet> generated = new ArrayList<MCTaskSet>();
-			while (generated.size() < nsets) {
-				List<MCTaskSet> newOnes = UUniFastDiscard.generate(u, n, nsets - generated.size(), tmin, tmax,
-						criticality, DC, CF, CP, delta, fixed);
-				for (MCTaskSet set : newOnes) {
-					if (!generated.contains(set)) {
-						generated.add(set);
-					}
-				}
-			}
-			sets.add(generated);
-		}
+		TestUtils.generateSets(n, nsets, tmin, tmax, criticality, DC, CF, CP, delta, fixed, 20000, sets, utils,
+				new ArrayList<MCTaskSet>(), null);
 
 		Plot plt = Plot.create();
 		List<List<Double>> scores = new ArrayList<List<Double>>();
@@ -88,11 +80,10 @@ public class SchedulabilityTest {
 			scores.add(current);
 			plt.plot().add(utils, current).label(test.toString());
 		}
-		
+
 		plt.legend();
 		plt.show();
-		
-		
+
 	}
 
 }

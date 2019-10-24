@@ -11,6 +11,14 @@ public class TaskState {
 	public int e;
 	
 	public int phi;
+	
+	public int finished;
+	
+	public int released;
+
+	public int lstInterrupt;
+	
+	public int taskIndex;
 
 	public TaskState(int i, int j, int k, int l) {
 		c = i;

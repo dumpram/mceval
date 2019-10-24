@@ -3,6 +3,7 @@ package com.github.dumpram.mceval.evaluation;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.dumpram.mceval.interfaces.IFeasibilityTest;
 import com.github.dumpram.mceval.models.MCTaskSet;
 import com.github.dumpram.mceval.taskgen.UUniFastDiscard;
 import com.github.sh0nk.matplotlib4j.NumpyUtils;
@@ -69,14 +70,15 @@ public class TestUtils {
 	}
 
 	public static void generateSets(int n, int nsets, int tmin, int tmax, int criticality, int DC, int CF, double CP,
-			double delta, boolean fixed, int hyperperiodlimit, List<List<MCTaskSet>> sets, List<Double> utils) {
+			double delta, boolean fixed, int hyperperiodlimit, List<List<MCTaskSet>> sets, List<Double> utils, List<MCTaskSet> blacklist,
+			IFeasibilityTest filter) {
 		for (double u : utils) {
 			List<MCTaskSet> generated = new ArrayList<MCTaskSet>();
 			while (generated.size() < nsets) {
 				List<MCTaskSet> newOnes = UUniFastDiscard.generate(u, n, nsets - generated.size(), tmin, tmax,
-						criticality, DC, CF, CP, delta, fixed, hyperperiodlimit);
+						criticality, DC, CF, CP, delta, fixed, hyperperiodlimit, filter);
 				for (MCTaskSet set : newOnes) {
-					if (!generated.contains(set)) {
+					if (!generated.contains(set) && !blacklist.contains(set)) {
 						generated.add(set);
 					}
 				}
@@ -89,6 +91,6 @@ public class TestUtils {
 	
 	public static void generateSets(int n, int nsets, int tmin, int tmax, int criticality, int DC, int CF, double CP,
 			double delta, boolean fixed, List<List<MCTaskSet>> sets, List<Double> utils) {
-		generateSets(n, nsets, tmin, tmax, criticality, DC, CF, CP, delta, fixed, Integer.MAX_VALUE, sets, utils);
+		generateSets(n, nsets, tmin, tmax, criticality, DC, CF, CP, delta, fixed, Integer.MAX_VALUE, sets, utils, new ArrayList<MCTaskSet>(), null);
 	}
 }

@@ -48,12 +48,24 @@ public class MCTaskSet {
 		return util;
 	}
 	
-	public double getUtilizationHI() {
+	public double getUtilizationHIHI() {
 		double util = 0;
 		
 		for (MCTask task : tasks) {
 			if (task.getL() == 1) {
 				util += 1.0 * task.getWCET(1) / task.getT();
+			}
+		}
+		
+		return util;
+	}
+	
+	public double getUtilizationHILO() {
+		double util = 0;
+		
+		for (MCTask task : tasks) {
+			if (task.getL() == 1) {
+				util += 1.0 * task.getWCET(0) / task.getT();
 			}
 		}
 		
@@ -92,7 +104,7 @@ public class MCTaskSet {
 		
 		long hyperperiod = MiscFunctions.lcm(periods);
 		
-		double u = getUtilizationHI();
+		double u = getUtilizationHIHI();
 		int max = 0;
 		int maxD = 0;
 		
@@ -124,7 +136,7 @@ public class MCTaskSet {
 
 		long hyperperiod = MiscFunctions.lcm(periods);
 		
-		double u = getUtilizationHI();
+		double u = getUtilizationHIHI();
 		int max = 0;
 		int maxD = 0;
 		for (int i = 0; i < tasks.size(); i++) {
@@ -161,5 +173,13 @@ public class MCTaskSet {
 	@Override
 	public String toString() {
 		return tasks.toString();
+	}
+
+	public double getCP() {
+		double sum = 0.0;
+		for (MCTask task : tasks) {
+			sum += (task.getL() == 1) ? 1 : 0;
+		}
+		return sum / tasks.size();
 	}
 }

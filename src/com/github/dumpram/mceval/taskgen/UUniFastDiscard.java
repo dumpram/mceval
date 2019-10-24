@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.github.dumpram.mceval.ftests.FeasibilityTestEkbergGreedy;
+import com.github.dumpram.mceval.interfaces.IFeasibilityTest;
 import com.github.dumpram.mceval.misc.MiscFunctions;
 import com.github.dumpram.mceval.models.MCTask;
 import com.github.dumpram.mceval.models.MCTaskSet;
@@ -11,18 +13,19 @@ import com.github.dumpram.mceval.models.MCTaskSet;
 public class UUniFastDiscard {
 
 	private static Random rand = new Random();
+	
 
 	public static List<MCTaskSet> generate(double u, int n, int nsets, int tmin, int tmax, int criticality) {
-		return generate(u, n, nsets, tmin, tmax, criticality, 1, 2.0, 0.5, 0.025, true, Integer.MAX_VALUE);
+		return generate(u, n, nsets, tmin, tmax, criticality, 1, 2.0, 0.5, 0.025, true, Integer.MAX_VALUE, null);
 	}
 	
 	public static List<MCTaskSet> generate(double u, int n, int nsets, int tmin, int tmax, int criticality, double DC,
 			double CF, double CP, double delta, boolean fixed) {
-		return generate(u, n, nsets, tmin, tmax, criticality, DC, CF, CP, delta, fixed, Integer.MAX_VALUE);
+		return generate(u, n, nsets, tmin, tmax, criticality, DC, CF, CP, delta, fixed, Integer.MAX_VALUE, null);
 	}
 
 	public static List<MCTaskSet> generate(double u, int n, int nsets, int tmin, int tmax, int criticality, double DC,
-			double CF, double CP, double delta, boolean fixed, int hyperperiodlimit) {
+			double CF, double CP, double delta, boolean fixed, int hyperperiodlimit, IFeasibilityTest test) {
 		List<MCTaskSet> systems = new ArrayList<MCTaskSet>();
 		List<List<Double>> u_sets = new ArrayList<List<Double>>();
 		List<List<Integer>> p_sets = new ArrayList<List<Integer>>();
@@ -88,13 +91,18 @@ public class UUniFastDiscard {
 			for (int j = 0; j < n; j++) {
 				List<Integer> wcets = new ArrayList<Integer>();
 				for (int k = 0; k < criticality; k++) {
+					int c = (int) Math.ceil(p_sets.get(i).get(j) * (1.0 * u_sets.get(i).get(j)));
 					if (cr_sets.get(i).get(j) == 1) {
 						wcets.add(
-								(int) Math.ceil(p_sets.get(i).get(j) * (1.0 * u_sets.get(i).get(j)) * Math.pow(CF, k)));
+								(int) c * (int) Math.pow(CF, k));
 					} else {
 						wcets.add(
 								(int) Math.ceil(p_sets.get(i).get(j) * (1.0 * u_sets.get(i).get(j)) * Math.pow(CF, 0)));
 					}
+				}
+				if (cr_sets.get(i).get(j) == 1 && wcets.get(1) < 2 * wcets.get(0)) {
+					System.out.println(wcets.get(0) + " " + wcets.get(1) + " " + p_sets.get(i).get(j) + " " + u_sets.get(i).get(j));
+					System.exit(0);
 				}
 				l_wcets.add(wcets);
 			}
@@ -112,9 +120,10 @@ public class UUniFastDiscard {
 			}
 			MCTaskSet set = new MCTaskSet(tasks);
 			double ulo = set.getUtilizationLO();
+			double cp = set.getCP();
 
-			if (ulo <= u + delta && ulo >= u - delta) {
-				systems.add(new MCTaskSet(tasks));
+			if (ulo <= u + delta && ulo >= u - delta && cp <= CP + delta && cp >= CP - delta && (test != null && test.isFeasible(set) || test == null)) {
+				systems.add(set);
 			}
 		}
 		return systems;

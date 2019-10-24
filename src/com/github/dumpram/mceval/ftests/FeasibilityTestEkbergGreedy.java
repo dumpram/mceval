@@ -146,7 +146,8 @@ public class FeasibilityTestEkbergGreedy implements IFeasibilityTest {
 	}
 
 	private long getLmax(MCTaskSet set) {
-		return Long.max(set.getSchedulabilityBoundHI(), set.getSchedulabilityBoundLO());
+		return set.hyperperiod();
+		//return Long.max(set.getSchedulabilityBoundHI(), set.getSchedulabilityBoundLO());
 	}
 
 	@Override

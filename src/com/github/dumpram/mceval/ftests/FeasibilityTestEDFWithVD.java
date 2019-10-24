@@ -8,7 +8,7 @@ public class FeasibilityTestEDFWithVD implements IFeasibilityTest {
 	public boolean isFeasible(MCTaskSet set) {
 		double x = set.getUtilizationLOHI() / (1 - set.getUtilizationLOLO());
 		
-		if (x * set.getUtilizationLOLO() + set.getUtilizationHI() <= 1) {
+		if (x * set.getUtilizationLOLO() + set.getUtilizationHIHI() <= 1) {
 			return true;
 		}
 		
