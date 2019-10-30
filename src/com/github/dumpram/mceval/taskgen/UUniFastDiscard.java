@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.github.dumpram.mceval.ftests.FeasibilityTestEkbergGreedy;
 import com.github.dumpram.mceval.interfaces.IFeasibilityTest;
 import com.github.dumpram.mceval.misc.MiscFunctions;
 import com.github.dumpram.mceval.models.MCTask;
