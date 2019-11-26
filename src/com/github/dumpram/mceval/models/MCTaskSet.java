@@ -182,4 +182,24 @@ public class MCTaskSet {
 		}
 		return sum / tasks.size();
 	}
+
+	public int loCount() {
+		int count = 0;
+		for (int i = 0; i < tasks.size(); i++) {
+			if (tasks.get(i).getL() == 0) {
+				count++;
+			}
+		}
+		return count;
+	}
+	
+	public int hiCount() {
+		int count = 0;
+		for (int i = 0; i < tasks.size(); i++) {
+			if (tasks.get(i).getL() == 1) {
+				count++;
+			}
+		}
+		return count;
+	}
 }

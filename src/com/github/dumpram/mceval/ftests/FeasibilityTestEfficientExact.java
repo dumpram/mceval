@@ -66,10 +66,10 @@ public class FeasibilityTestEfficientExact implements IFeasibilityTest {
 		ArrayList<MCState> unexploredStack = new ArrayList<MCState>();
 		unexploredStack.add(state);
 		while (!unexploredStack.isEmpty()) {
-			//System.out.println("Unexplored: " + unexploredStack.size());
+			System.out.println("Unexplored: " + unexploredStack.size());
 			MCState s = unexploredStack.get(unexploredStack.size() - 1);
-			//System.out.println(s);
-			//System.out.println();
+			System.out.println(s);
+			System.out.println();
 			unexploredStack.remove(unexploredStack.size() - 1);
 			List<MCState> successorStates = getSuccessorStates(s, state, set, k);
 			for (MCState _s : successorStates) {
@@ -458,7 +458,7 @@ public class FeasibilityTestEfficientExact implements IFeasibilityTest {
 					_phi = Math.abs(ts.p - 1);
 				}
 				
-				if (rp[i] >= 1) { // upitno...
+				if (rp[i] == 1) { // upitno...
 					_p = task.getT();
 				} else if (s.equals(initialState)) {
 					_p = 0;
