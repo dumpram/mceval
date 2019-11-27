@@ -4,7 +4,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
@@ -13,15 +15,17 @@ import com.github.dumpram.mceval.assignments.PriorityAssignmentDynamic;
 import com.github.dumpram.mceval.assignments.PriorityAssignmentNOPA;
 import com.github.dumpram.mceval.assignments.PriorityAssignmentOPA;
 import com.github.dumpram.mceval.ftests.FeasibilityTestEfficientExact;
+import com.github.dumpram.mceval.ftests.FeasibilityTestEfficientExactWrong;
 import com.github.dumpram.mceval.ftests.FeasibilityTestResponseTime;
 import com.github.dumpram.mceval.ftests.FeasibilityTestUBHL;
+import com.github.dumpram.mceval.models.MCTaskSet;
 import com.github.dumpram.mceval.rtimes.ResponseTimeAMCTight;
 import com.github.dumpram.mceval.rtimes.ResponseTimeAMCmax;
 import com.github.sh0nk.matplotlib4j.PythonExecutionException;
 
 public class ValidityTests {
 
-	@Test
+	//@Test
 	public void testDominanceWithRandomAssignmentImplicit() throws IOException, PythonExecutionException {
 		List<TestItem> tests = new ArrayList<TestItem>();
 		TestItem ubhl = new TestItem(new FeasibilityTestUBHL(), new PriorityAssignmentDM());
@@ -56,7 +60,7 @@ public class ValidityTests {
 		assertTrue(exact.score() <= ubhl.score());
 	}
 
-	@Test
+	//@Test
 	public void testDominanceWithRandomAssignmentConstrained() {
 		List<TestItem> tests = new ArrayList<TestItem>();
 		TestItem ubhl = new TestItem(new FeasibilityTestUBHL(), new PriorityAssignmentDM());
@@ -91,7 +95,7 @@ public class ValidityTests {
 		assertTrue(exact.score() <= ubhl.score());
 	}
 
-	@Test
+	//@Test
 	public void testDominanceWithTheBestAssignmentImplicit() {
 		List<TestItem> tests = new ArrayList<TestItem>();
 		TestItem ubhl = new TestItem(new FeasibilityTestUBHL(), new PriorityAssignmentDM());
@@ -127,7 +131,7 @@ public class ValidityTests {
 		assertTrue(exact.score() <= ubhl.score());
 	}
 
-	@Test
+	//@Test
 	public void testDominanceWithTheBestAssignmentConstrained() {
 		List<TestItem> tests = new ArrayList<TestItem>();
 		TestItem ubhl = new TestItem(new FeasibilityTestUBHL(), new PriorityAssignmentDM());
@@ -163,7 +167,7 @@ public class ValidityTests {
 		assertTrue(exact.score() <= ubhl.score());
 	}
 	
-	@Test
+	//@Test
 	public void testDominanceWithTheBestAssignmentFloating() {
 		List<TestItem> tests = new ArrayList<TestItem>();
 		TestItem ubhl = new TestItem(new FeasibilityTestUBHL(), new PriorityAssignmentDM());
@@ -199,7 +203,7 @@ public class ValidityTests {
 		assertTrue(exact.score() <= ubhl.score());
 	}
 	
-	@Test
+	//@Test
 	public void testAMCMaxWithNOPA() throws IOException, PythonExecutionException {
 		List<TestItem> tests = new ArrayList<TestItem>();
 		TestItem amcmaxnopa = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCmax()), new PriorityAssignmentNOPA());
@@ -228,7 +232,7 @@ public class ValidityTests {
 		assertTrue(amcmaxnopa.score() <= amcmaxopa.score());
 	}
 	
-	@Test
+	//@Test
 	public void testDominanceWithTheBestAssignmentFloatingForThreeTasks() {
 		List<TestItem> tests = new ArrayList<TestItem>();
 		TestItem ubhl = new TestItem(new FeasibilityTestUBHL(), new PriorityAssignmentDM());
@@ -264,7 +268,7 @@ public class ValidityTests {
 		assertTrue(exact.score() <= ubhl.score());
 	}
 	
-	@Test
+	//@Test
 	public void testDominanceWithTheBestAssignmentFloatingForEightTasks() {
 		List<TestItem> tests = new ArrayList<TestItem>();
 		TestItem ubhl = new TestItem(new FeasibilityTestUBHL(), new PriorityAssignmentDM());
@@ -300,7 +304,7 @@ public class ValidityTests {
 		assertTrue(exact.score() <= ubhl.score());
 	}
 	
-	@Test
+	//@Test
 	public void testDominanceWithTheBestAssignmentConstrainedWithLargerPeriods() {
 		List<TestItem> tests = new ArrayList<TestItem>();
 		TestItem ubhl = new TestItem(new FeasibilityTestUBHL(), new PriorityAssignmentDM());
@@ -335,6 +339,63 @@ public class ValidityTests {
 		assertTrue(amctight.score() <= exact.score() && amctight.score() <= ubhl.score());
 		assertTrue(exact.score() <= ubhl.score());
 	}
+	
+	@Test
+	public void testExactRevision() throws IOException, PythonExecutionException {
+		List<TestItem> tests = new ArrayList<TestItem>();
+		TestItem ubhl = new TestItem(new FeasibilityTestUBHL(), new PriorityAssignmentDM());
+		TestItem amcmax = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCmax()), new PriorityAssignmentOPA(new
+				ResponseTimeAMCmax()));
+		TestItem exact = new TestItem(new FeasibilityTestEfficientExact(), new PriorityAssignmentNOPA());
+		TestItem exactWrong = new TestItem(new FeasibilityTestEfficientExactWrong(), new PriorityAssignmentNOPA());
+
+		tests.add(ubhl);
+		tests.add(amcmax);
+		tests.add(exact);
+		tests.add(exactWrong);
+
+		double minimumUtilization = 0.5;
+		double maximumUtilization = 0.9;
+		double utilizationIncrement = 0.05;
+		int n = 2;
+		int nsets = 1000;
+		int tmin = 2;
+		int tmax = 12;
+		int criticality = 2;
+		int DC = 1;
+		int CF = 2;
+		double CP = 0.5;
+		double delta = utilizationIncrement / 2;
+		boolean fixed = true;
+
+		TestUtils.runTest(tests, minimumUtilization, maximumUtilization, utilizationIncrement, n, nsets, tmin, tmax, criticality,
+				DC, CF, CP, delta, fixed);
+		
+		assertTrue(amcmax.score() <= exact.score() && exact.score() <= ubhl.score());
+		assertTrue(exactWrong.score() <= ubhl.score());
+		
+		System.out.println(exact.score());
+		System.out.println(exactWrong.score());
+		
+		Set<MCTaskSet> wrong = new HashSet<MCTaskSet>(exactWrong.schedulableSets);
+		wrong.removeAll(new HashSet<MCTaskSet>(exact.schedulableSets));
+		
+		MCTaskSet one = null;
+		
+		for (MCTaskSet set : wrong) {
+			one = set;
+			break;
+		}
+		
+		System.out.println(one);
+		
+		System.out.println(wrong.size());
+		
+		System.out.println(new FeasibilityTestEfficientExact().isFeasible(one));
+		System.out.println(new FeasibilityTestEfficientExactWrong().isFeasible(one));
+
+	}
+
 
 
 

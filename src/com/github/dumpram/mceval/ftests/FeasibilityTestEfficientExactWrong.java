@@ -11,7 +11,7 @@ import com.github.dumpram.mceval.models.TaskState;
 import com.github.dumpram.mceval.rtimes.ResponseTimeAMCmax;
 import com.github.dumpram.mceval.rtimes.ResponseTimeLO;
 
-public class FeasibilityTestEfficientExact implements IFeasibilityTest {
+public class FeasibilityTestEfficientExactWrong implements IFeasibilityTest {
 	
 	private ResponseTimeLO responseTimeLO = new ResponseTimeLO();
 	
@@ -222,7 +222,7 @@ public class FeasibilityTestEfficientExact implements IFeasibilityTest {
 		int _rsk = getBound(_s, set, m, k, tcms);
 		int rsk = _rsk + taskK.getT() - tsk.p;
 		//Pr-9
-		if (rsk <= Robs) {
+		if (rsk <= taskK.getD()) {
 			return true;
 		}
 		
@@ -458,7 +458,7 @@ public class FeasibilityTestEfficientExact implements IFeasibilityTest {
 					_phi = Math.abs(ts.p - 1);
 				}
 				
-				if (rp[i] >= 1) { // upitno...
+				if (rp[i] == 1) { // upitno...
 					_p = task.getT();
 				} else if (s.equals(initialState)) {
 					_p = 0;
