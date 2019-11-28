@@ -62,6 +62,9 @@ public class FeasibilityTestEfficientExact implements IFeasibilityTest {
 		}
 
 		MCState state = new MCState(0, 0, taskStates);
+		state.root = true;
+		
+		int sp = 0;
 
 		ArrayList<MCState> unexploredStack = new ArrayList<MCState>();
 		unexploredStack.add(state);
@@ -72,6 +75,7 @@ public class FeasibilityTestEfficientExact implements IFeasibilityTest {
 			System.out.println();
 			unexploredStack.remove(unexploredStack.size() - 1);
 			List<MCState> successorStates = getSuccessorStates(s, state, set, k);
+			s.successorStates.addAll(successorStates);
 			for (MCState _s : successorStates) {
 				TaskState tk = _s.taskStates.get(k);
 				MCTask task = set.getTasks().get(k);
@@ -88,9 +92,12 @@ public class FeasibilityTestEfficientExact implements IFeasibilityTest {
 					continue;
 				} else if (!unexploredStack.contains(_s)) {
 					unexploredStack.add(_s);
+					_s.sp = sp + 1;
 				}
 			}
 		}
+		
+		System.out.println(state.draw());
 		
 		return true;
 	}
@@ -105,6 +112,7 @@ public class FeasibilityTestEfficientExact implements IFeasibilityTest {
 			MCTask task = set.getTasks().get(i);
 			TaskState ts = _s.taskStates.get(i);
 			if (-ts.p >= task.getT()) {
+				_s.pr = 1;
 				return true;
 			}
 		}
@@ -121,6 +129,7 @@ public class FeasibilityTestEfficientExact implements IFeasibilityTest {
 		}
 		
 		if (indicator) {
+			_s.pr = 2;
 			return true;
 		}
 		
@@ -130,6 +139,7 @@ public class FeasibilityTestEfficientExact implements IFeasibilityTest {
 			TaskState ts = _s.taskStates.get(i);
 			if (_s.gamma == 1 && task.getL() == 1 && (ts.p <= 0 || 
 					(ts.c > 0 && ts.e < task.getWCET(1)))) {
+				_s.pr = 3;
 				return true;
 			}
 		}
@@ -164,6 +174,7 @@ public class FeasibilityTestEfficientExact implements IFeasibilityTest {
 			TaskState ts = _s.taskStates.get(i);
 			MCTask task = set.getTasks().get(i);
 			if (task.getL() == 1 && ts.p <= 0) {
+				_s.pr = 4;
 				return true;
 			}
 		}
@@ -173,6 +184,7 @@ public class FeasibilityTestEfficientExact implements IFeasibilityTest {
 			TaskState ts = _s.taskStates.get(i);
 			MCTask task = set.getTasks().get(i);
 			if (task.getL() == 1 && ts.c > 0 && ts.e < task.getWCET(1)) {
+				_s.pr = 5;
 				return true;
 			}
 		}
@@ -182,6 +194,7 @@ public class FeasibilityTestEfficientExact implements IFeasibilityTest {
 			TaskState ts = _s.taskStates.get(i);
 			MCTask task = set.getTasks().get(i);
 			if (task.getL() == 0 && ts.p <= 0) {
+				_s.pr = 6;
 				return true;
 			}
 		}
@@ -202,6 +215,7 @@ public class FeasibilityTestEfficientExact implements IFeasibilityTest {
 				TaskState ts = _s.taskStates.get(i);
 				MCTask task = set.getTasks().get(i);
 				if (task.getL() == 0 && ts.p <= 0) {
+					_s.pr = 7;
 					return true;
 				}
 			}
@@ -214,6 +228,7 @@ public class FeasibilityTestEfficientExact implements IFeasibilityTest {
 			MCTask task = set.getTasks().get(i);
 			if (tsm.p == taskM.getT() && task.getL() == 0 && ts.c > 0 && 
 					sumUpToWithoutM(_s, m, i) == 0) {
+				_s.pr = 8;
 				return true;
 			}
 		}
@@ -245,6 +260,7 @@ public class FeasibilityTestEfficientExact implements IFeasibilityTest {
 					} 
 				}
 				if (valid) {
+					_s.pr = 10;
 					return true;
 				}
 			}
@@ -291,6 +307,7 @@ public class FeasibilityTestEfficientExact implements IFeasibilityTest {
 				int ri = t - (task.getT() - ts.p);
 				int rm = t - (taskM.getT() - tsm.p);
 				if (ts.p <= 0 || (rm < ri && ts.phi > 0)) {
+					_s.pr = 11;
 					return true;
 				}
 			}
@@ -302,6 +319,7 @@ public class FeasibilityTestEfficientExact implements IFeasibilityTest {
 			int ri = t - (task.getT() - ts.p);
 			int rm = t - (taskM.getT() - tsm.p);
 			if (ts.phi > 0 && ts.p <= ts_m.p && rm < ri) {
+				_s.pr = 11;
 				return true;
 			}
 		}
@@ -312,6 +330,7 @@ public class FeasibilityTestEfficientExact implements IFeasibilityTest {
 			int ri = t - (task.getT() - ts.p);
 			int rm = t - (taskM.getT() - tsm.p);
 			if (ts.phi > 0 && rm < ri && ts.c == 0) {
+				_s.pr = 11;
 				return true;
 			}
 		}
