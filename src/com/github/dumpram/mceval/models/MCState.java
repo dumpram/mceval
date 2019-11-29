@@ -1,6 +1,7 @@
 package com.github.dumpram.mceval.models;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MCState {
@@ -29,9 +30,16 @@ public class MCState {
 	
 	public boolean root = false;
 
-	public MCState(int t, int _gamma, List<TaskState> taskStates) {
+	public MCState(int t, int gamma, List<TaskState> taskStates) {
+		this(t, gamma, taskStates, null);
+	}
+
+	public MCState(int t, int gamma, List<TaskState> taskStates, Integer[] rp) {
+		if (rp != null) {
+			releasePatterns.add(rp);
+		}
 		id = id_cnt++;
-		gamma = _gamma;
+		this.gamma = gamma;
 		this.t = t;
 		this.taskStates = taskStates;
 	}
@@ -88,7 +96,7 @@ public class MCState {
 		forExport += drawTree(0);
 		forExport += ";\n";
 		
-		forExport += drawPaths(0);
+		forExport += drawPaths();
 		
 		forExport += drawPruning();
 		
@@ -98,13 +106,13 @@ public class MCState {
 	private String drawPruning() {
 		String forExport = "";
 		
-		String id = Character.toString(65 + this.id);
+		String id = getId();
 		
 		if (pr != 0) {
 			forExport += "\\node [below, text width=1cm, align=center] at (" + id + ".south) {\\Cross\\\\(PR"
 					+ pr + ")};\n";
 		} else {
-			forExport += "\\node [draw, circle, above, align=center, ultra thick] at (" + id + ".north east)"
+			forExport += "\\node [draw, circle, above, align=center, ultra thick, fill=white] at (" + id + ".north east)"
 					+ "{" + sp + "};\n";
 		}
 		
@@ -114,15 +122,27 @@ public class MCState {
 		return forExport;
 	}
 
-	private String drawPaths(int i) {
+	private String drawPaths() {
 		String forExport = "";
 		
-		String id = Character.toString(65 + this.id);
+		String id = getId();
 		
+		
+
 		for (MCState child : successorStates) {
-			String childId = Character.toString(65 + child.id);
-			forExport += "\\path [draw, ->, ultra thick] (" + id + ") edge node[left]{$(0, 0, 0)$}  (" + childId + ");\n";
-			forExport += child.drawPaths(i);
+			String childId = child.getId();
+			String rps = "";
+			for (int i = 0; i < child.releasePatterns.size(); i++) {
+				Integer[] rp = child.releasePatterns.get(i);
+				String r = Arrays.toString(rp).replace("[", "(").replace("]", ")");
+				rps += "$" + r + "$";
+				if (i < child.releasePatterns.size() - 1) {
+					rps += "\\\\";
+				}
+			}
+			
+			forExport += "\\path [draw, ->, ultra thick] (" + id + ") edge node[midway, above, sloped, text width=1cm]{" + rps + "}  (" + childId + ");\n";
+			forExport += child.drawPaths();
 		}
 		return forExport;
 	}
@@ -130,12 +150,14 @@ public class MCState {
 	private String defineText() {
 		String forExport = "";
 		
-		String id = Character.toString(65 + this.id);
+		String id = getId();
 		
 		String tasks = "";
 		for (TaskState ts : taskStates) {
 			tasks += ts.toString() + "\\\\";
 		}
+		
+		tasks += (gamma == 0)? "LO" : "HI";
 		
 		forExport += "\\def\\nodetext" + id + "{" + tasks + "};\n";
 		
@@ -148,7 +170,7 @@ public class MCState {
 
 	public String drawTree(int depth) {
 		String forExport = "";
-		String id = Character.toString(65 + this.id);
+		String id = getId();
 		boolean pruned = pr > 0;
 		String style = (pruned) ? "state" : "state_s";
 		if (root) {
@@ -169,6 +191,20 @@ public class MCState {
 		}
 		
 		return forExport;
+	}
+	
+	private String getId() {
+		String forExport = "";
+		
+		int count = id / 26;
+		int offset = id % 26;
+		
+		for (int i = 0; i < count + 1; i++) {
+			forExport += Character.toString(65 + offset);
+		}
+		
+		return forExport;
+		
 	}
 	
 

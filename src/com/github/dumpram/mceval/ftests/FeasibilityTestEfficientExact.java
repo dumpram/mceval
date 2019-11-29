@@ -64,13 +64,14 @@ public class FeasibilityTestEfficientExact implements IFeasibilityTest {
 		MCState state = new MCState(0, 0, taskStates);
 		state.root = true;
 		
-		int sp = 0;
-
+		int sp = 1;
+		
 		ArrayList<MCState> unexploredStack = new ArrayList<MCState>();
 		unexploredStack.add(state);
 		while (!unexploredStack.isEmpty()) {
 			System.out.println("Unexplored: " + unexploredStack.size());
 			MCState s = unexploredStack.get(unexploredStack.size() - 1);
+			s.sp = sp++;
 			System.out.println(s);
 			System.out.println();
 			unexploredStack.remove(unexploredStack.size() - 1);
@@ -82,17 +83,19 @@ public class FeasibilityTestEfficientExact implements IFeasibilityTest {
 				if (tk.c == 0) {
 					Robs = Math.max(Robs, task.getT() - tk.p);
 					if (Robs == Rsuff) {
+						System.out.println(state.draw());
 						return true;
 					} else {
 						continue;
 					}
 				} else if (tk.c > tk.q) {
+					System.out.println(state.draw());
 					return false;
 				} else if (isPruned(_s, set, k, state, Robs)) {
 					continue;
 				} else if (!unexploredStack.contains(_s)) {
 					unexploredStack.add(_s);
-					_s.sp = sp + 1;
+					//_s.sp = sp++;
 				}
 			}
 		}
@@ -238,6 +241,7 @@ public class FeasibilityTestEfficientExact implements IFeasibilityTest {
 		int rsk = _rsk + taskK.getT() - tsk.p;
 		//Pr-9
 		if (rsk <= Robs) {
+			_s.pr = 9;
 			return true;
 		}
 		
@@ -477,7 +481,7 @@ public class FeasibilityTestEfficientExact implements IFeasibilityTest {
 					_phi = Math.abs(ts.p - 1);
 				}
 				
-				if (rp[i] >= 1) { // upitno...
+				if (rp[i] == 1) { // upitno...
 					_p = task.getT();
 				} else if (s.equals(initialState)) {
 					_p = 0;
@@ -493,8 +497,12 @@ public class FeasibilityTestEfficientExact implements IFeasibilityTest {
 				}
 				taskStates.add(new TaskState(_c, _q, _p, _e, _phi));
 			}
-			MCState newOne = new MCState(_t, _gamma, taskStates);
-			states.add(newOne);
+			MCState newOne = new MCState(_t, _gamma, taskStates, rp);
+			if (!states.contains(newOne)) {
+				states.add(newOne);
+			} else {
+				states.get(states.indexOf(newOne)).releasePatterns.add(rp);
+			}
 			//System.out.println(Arrays.toString(rp) + "\n" + newOne.toString());
 		}
 
