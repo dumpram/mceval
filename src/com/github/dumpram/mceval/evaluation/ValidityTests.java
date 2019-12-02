@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -354,13 +355,13 @@ public class ValidityTests {
 		tests.add(exact);
 		tests.add(exactWrong);
 
-		double minimumUtilization = 0.5;
+		double minimumUtilization = 0.8;
 		double maximumUtilization = 0.9;
-		double utilizationIncrement = 0.05;
-		int n = 2;
+		double utilizationIncrement = 0.1;
+		int n = 3;
 		int nsets = 1000;
 		int tmin = 2;
-		int tmax = 12;
+		int tmax = 8;
 		int criticality = 2;
 		int DC = 1;
 		int CF = 2;
@@ -382,17 +383,25 @@ public class ValidityTests {
 		
 		MCTaskSet one = null;
 		
+		int random = new Random().nextInt(wrong.size());
+		
+		int i = 0;
 		for (MCTaskSet set : wrong) {
-			one = set;
-			break;
+			if (i++ == random) {
+				one = set;
+				break;
+			}
 		}
 		
 		System.out.println(one);
 		
 		System.out.println(wrong.size());
 		
+		one = new PriorityAssignmentNOPA().assign(one);
+		
 		System.out.println(new FeasibilityTestEfficientExact().isFeasible(one));
 		System.out.println(new FeasibilityTestEfficientExactWrong().isFeasible(one));
+		System.out.println(wrong.size());
 
 	}
 

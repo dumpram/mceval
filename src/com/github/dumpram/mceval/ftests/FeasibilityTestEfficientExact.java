@@ -20,7 +20,7 @@ public class FeasibilityTestEfficientExact implements IFeasibilityTest {
 	// pr(tau_i) = i
 	public boolean isFeasible(MCTaskSet set) {
 		int n = set.getTasks().size();
-
+		MCState.id_cnt = 0;
 		for (int k = 0; k < n; k++) {
 			MCTask task = set.getTasks().get(k);
 			if (task.getL() == 0 || allHiAreLo(set, k)) {
@@ -481,7 +481,7 @@ public class FeasibilityTestEfficientExact implements IFeasibilityTest {
 					_phi = Math.abs(ts.p - 1);
 				}
 				
-				if (rp[i] == 1) { // upitno...
+				if (rp[i] >= 1) { // upitno...
 					_p = task.getT();
 				} else if (s.equals(initialState)) {
 					_p = 0;

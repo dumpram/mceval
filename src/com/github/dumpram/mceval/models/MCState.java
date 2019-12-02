@@ -26,7 +26,7 @@ public class MCState {
 	
 	public int id = 0;
 	
-	private static int id_cnt = 0;
+	public static int id_cnt = 0;
 	
 	public boolean root = false;
 

@@ -14,9 +14,9 @@ public class TestForRevision2 {
 		
 		List<MCTask> tasks = new ArrayList<MCTask>();
 		
-		tasks.add(new MCTask(new int[] {1, 2},  4,  4, 1));
-		tasks.add(new MCTask(new int[] {1, 1},  2,  2, 0));
-		tasks.add(new MCTask(new int[] {1, 3},  9,  9, 1));
+		tasks.add(new MCTask(new int[] {1, 2}, 4, 4, 1));
+		tasks.add(new MCTask(new int[] {1, 1}, 3, 3, 0));
+		tasks.add(new MCTask(new int[] {2, 4}, 8, 8, 1));
 		
 		MCTaskSet set = new MCTaskSet(tasks);
 		

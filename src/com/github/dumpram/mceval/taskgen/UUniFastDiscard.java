@@ -119,9 +119,9 @@ public class UUniFastDiscard {
 			}
 			MCTaskSet set = new MCTaskSet(tasks);
 			double ulo = set.getUtilizationLO();
-			double cp = set.getCP();
+			//double cp = set.getCP();
 
-			if (ulo <= u + delta && ulo >= u - delta && cp <= CP + delta && cp >= CP - delta && (test != null && test.isFeasible(set) || test == null)) {
+			if (ulo <= u + delta && ulo >= u - delta && (test != null && test.isFeasible(set) || test == null)) {
 				systems.add(set);
 			}
 		}
