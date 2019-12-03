@@ -29,6 +29,10 @@ public class MCState {
 	public static int id_cnt = 0;
 	
 	public boolean root = false;
+	
+	public boolean success = false;
+	
+	public boolean fail = false;
 
 	public MCState(int t, int gamma, List<TaskState> taskStates) {
 		this(t, gamma, taskStates, null);
@@ -109,11 +113,12 @@ public class MCState {
 		String id = getId();
 		
 		if (pr != 0) {
-			forExport += "\\node [below, text width=1cm, align=center] at (" + id + ".south) {\\Cross\\\\(PR"
+			forExport += "\\node [prune_style] at (" + id + ".south) {\\Cross\\\\(PR"
 					+ pr + ")};\n";
 		} else {
-			forExport += "\\node [draw, circle, above, align=center, ultra thick, fill=white] at (" + id + ".north east)"
-					+ "{" + sp + "};\n";
+			String _sp = (sp == 0)? "U" : "" + sp;
+			forExport += "\\node [enumerate_style] at (" + id + ".north east)"
+					+ "{" + _sp + "};\n";
 		}
 		
 		for (MCState child : successorStates) {
@@ -141,7 +146,7 @@ public class MCState {
 				}
 			}
 			
-			forExport += "\\path [draw, ->, ultra thick] (" + id + ") edge node[midway, above, sloped, text width=1cm]{" + rps + "}  (" + childId + ");\n";
+			forExport += "\\path [draw, ->, ultra thick] (" + id + ") edge node[path_style]{" + rps + "}  (" + childId + ");\n";
 			forExport += child.drawPaths();
 		}
 		return forExport;
@@ -173,6 +178,7 @@ public class MCState {
 		String id = getId();
 		boolean pruned = pr > 0;
 		String style = (pruned) ? "state" : "state_s";
+		
 		if (root) {
 			forExport += "\\node[" + style + "] (" + id + ") {\\nodetext" + id + "}\n";
 		} else {

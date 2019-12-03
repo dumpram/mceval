@@ -355,7 +355,7 @@ public class ValidityTests {
 		tests.add(exact);
 		tests.add(exactWrong);
 
-		double minimumUtilization = 0.8;
+		double minimumUtilization = 0.6;
 		double maximumUtilization = 0.9;
 		double utilizationIncrement = 0.1;
 		int n = 3;
@@ -393,11 +393,17 @@ public class ValidityTests {
 			}
 		}
 		
+		for (MCTaskSet set : wrong) {
+			System.out.println(set);
+		}
+		
 		System.out.println(one);
 		
 		System.out.println(wrong.size());
 		
 		one = new PriorityAssignmentNOPA().assign(one);
+		
+		System.out.println(one);
 		
 		System.out.println(new FeasibilityTestEfficientExact().isFeasible(one));
 		System.out.println(new FeasibilityTestEfficientExactWrong().isFeasible(one));
