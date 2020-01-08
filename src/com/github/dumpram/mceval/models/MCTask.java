@@ -48,6 +48,19 @@ public class MCTask {
 		this.L = l;
 	}
 
+	public MCTask(String string) {
+		String[] params = string.split(" ");
+		
+		C = new int[2];
+		C[0] = Integer.parseInt(params[0]);
+		C[1] = Integer.parseInt(params[1]);
+		T = Integer.parseInt(params[2]);
+		D = new int[2];
+		D[0] = Integer.parseInt(params[3]);
+		D[1] = Integer.parseInt(params[4]);
+		L = Integer.parseInt(params[5]);
+	}
+
 	public int getWCET(int level) {
 		return C[level];
 	}

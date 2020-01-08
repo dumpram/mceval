@@ -6,6 +6,7 @@ import java.util.List;
 import com.github.dumpram.mceval.assignments.PriorityAssignmentNOPA;
 import com.github.dumpram.mceval.ftests.FeasibilityTestEfficientExact;
 import com.github.dumpram.mceval.ftests.FeasibilityTestEfficientExactWrong;
+import com.github.dumpram.mceval.ftests.FeasibilityTestUBHL;
 import com.github.dumpram.mceval.models.MCTask;
 import com.github.dumpram.mceval.models.MCTaskSet;
 
@@ -27,9 +28,11 @@ public class TestForRevision {
 		
 		FeasibilityTestEfficientExact test = new FeasibilityTestEfficientExact();
 		FeasibilityTestEfficientExactWrong wrongTest = new FeasibilityTestEfficientExactWrong();
+		FeasibilityTestUBHL ubhl = new FeasibilityTestUBHL();
 		
 		System.out.println(test.isFeasible(set));
 		System.out.println(wrongTest.isFeasible(set));
+		System.out.println(ubhl.isFeasible(set));
 	}
 
 }

@@ -174,6 +174,17 @@ public class MCTaskSet {
 	public String toString() {
 		return tasks.toString();
 	}
+	
+	public String export() {
+		String export = "";
+		
+		for (MCTask task : tasks) {
+			export += task.getWCET(0) + " " + task.getWCET(1) + " " + task.getT() + " " + task.getD(0) + " " + task.getD(1) + 
+					" " + task.getL() + "\n";
+		}
+		
+		return export;
+	}
 
 	public double getCP() {
 		double sum = 0.0;
