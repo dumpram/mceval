@@ -65,7 +65,14 @@ public class ResponseTimeAMCTight implements IResponseTime {
 									t += ((int) Math.floor(1.0 * s / TJ) + 1) * CLO;
 								}
 								if (ss < j && LJ == 0 /**&& s != 0**/) {
-									t-=CLO;
+									int Ts = taskS.getT();
+									if (Math.floor(1.0 * s / TJ) * TJ <= Math.floor(1.0 * s / Ts) * Ts) {
+										t-=CLO;
+									} else if (Math.floor(1.0 * s / TJ) * TJ + CLO > s) {
+										t-=CLO;
+										int Cs = taskS.getWCET(0);
+										t += Math.max((s - Cs) - Math.floor(1.0 * s / TJ) * TJ, 0);
+									}
 								} 
 								if (j < ss && LJ == 1) {
 									int m = getm(TJ, DJ, s, R);
@@ -91,6 +98,10 @@ public class ResponseTimeAMCTight implements IResponseTime {
 
 	private int getM(int Tk, int Dk, Integer s, int t) {
 		return Math.min((int) Math.ceil((((double) (t - s - (Tk - Dk))) / Tk) + 1), (int) Math.ceil(((double) t) / Tk));
+	}
+	
+	private int getMm(int Tk, int Dk, Integer s, int t) {
+		return Math.max(0, -1 + Math.min((int) Math.ceil((((double) (t - s - (Tk - Dk))) / Tk) + 1), (int) Math.ceil(((double) t) / Tk)));
 	}
 
 	private int getm(int Tk, int Dk, Integer s, int t) {
