@@ -14,7 +14,7 @@ import com.github.dumpram.mceval.rtimes.ResponseTimePeriodic;
 public class ExactPeriodicTest {
 	
 	
-	//@Test
+	@Test
 	public void CounterExample1() {
 		List<MCTask> tasks = new ArrayList<MCTask>();
 
@@ -29,7 +29,7 @@ public class ExactPeriodicTest {
 		
 	}
 	
-	//@Test
+	@Test
 	public void CounterExample2() {
 		List<MCTask> tasks = new ArrayList<MCTask>();
 
