@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import com.github.dumpram.mceval.interfaces.IPriorityAssignment;
+import com.github.dumpram.mceval.interfaces.PriorityAssignment;
 import com.github.dumpram.mceval.models.MCTask;
 import com.github.dumpram.mceval.models.MCTaskSet;
 
-public class PriorityAssignmentDM implements IPriorityAssignment {
+public class PriorityAssignmentDM extends PriorityAssignment {
 		
 	private Comparator<MCTask> comp = new Comparator<MCTask>() {
 

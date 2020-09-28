@@ -3,12 +3,12 @@ package com.github.dumpram.mceval.assignments;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.dumpram.mceval.interfaces.IPriorityAssignment;
+import com.github.dumpram.mceval.interfaces.PriorityAssignment;
 import com.github.dumpram.mceval.interfaces.IResponseTime;
 import com.github.dumpram.mceval.models.MCTask;
 import com.github.dumpram.mceval.models.MCTaskSet;
 
-public class PriorityAssignmentOPA implements IPriorityAssignment {
+public class PriorityAssignmentOPA extends PriorityAssignment {
 	
 	private IResponseTime responseTime;
 	

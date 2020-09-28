@@ -1,5 +1,6 @@
 package com.github.dumpram.mceval.rtimes;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.github.dumpram.mceval.interfaces.IResponseTime;
@@ -22,7 +23,7 @@ public class ResponseTimeSMCno implements IResponseTime {
 		while (R != t && R <= D) {
 			R = t;
 			t = C;
-			for (int j = 0; j < n; j++) {
+			for (int j = 0; j < i; j++) {
 				MCTask taskJ = tasks.get(j);
 				t = (int) (t + (int) Math.ceil((double) R / taskJ.getT()) * taskJ.getWCET(task.getL()));
 			}
@@ -57,6 +58,28 @@ public class ResponseTimeSMCno implements IResponseTime {
 	@Override
 	public String toString() {
 		return "SMC-no";
+	}
+
+	@Override
+	public String printResponseTime(int i, HashMap<Integer, Integer> priorityOrder, MCTaskSet set) {
+		String forExport = "";
+
+		List<MCTask> tasks = set.getTasks();
+		MCTask task = tasks.get(i);
+		int n = tasks.size();
+		int L = task.getL();
+		int C = task.getWCET(L);
+		int R = responseTime(i, set);
+
+		forExport += "R_" + (priorityOrder.get(i) + 1) + " = " + C + "+";
+
+		for (int j = 0; j < i; j++) {
+				MCTask taskJ = tasks.get(j);
+				forExport += "\\lceil\\frac{R_" + (priorityOrder.get(i) + 1) + "}{" + taskJ.getT() + "}\\rceil \\cdot"
+						+ taskJ.getWCET(task.getL()) + "+";
+		}
+
+		return forExport.substring(0, forExport.length() - 1) + " = " + R;
 	}
 
 }

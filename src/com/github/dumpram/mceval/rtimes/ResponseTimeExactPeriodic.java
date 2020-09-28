@@ -1,6 +1,7 @@
 package com.github.dumpram.mceval.rtimes;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.github.dumpram.mceval.interfaces.IResponseTime;
@@ -185,6 +186,12 @@ public class ResponseTimeExactPeriodic implements IResponseTime {
 	@Override
 	public String toString() {
 		return "Exact Periodic";
+	}
+
+	@Override
+	public String printResponseTime(int i, HashMap<Integer, Integer> priorityOrder, MCTaskSet orderedSet) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

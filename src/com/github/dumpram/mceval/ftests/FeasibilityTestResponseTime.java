@@ -33,6 +33,10 @@ public class FeasibilityTestResponseTime implements IFeasibilityTest {
 
 	}
 	
+	public IResponseTime getResponseTime() {
+		return responseTime;
+	}
+	
 	@Override
 	public String toString() {
 		return responseTime.toString();
