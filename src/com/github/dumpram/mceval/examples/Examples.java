@@ -120,7 +120,7 @@ public class Examples {
 						HashMap<Integer, Integer> priorityOrder = test.priorityAssignment.getPriorityOrdering(set, orderedSet);
 						for (int i = 0; i < n; i++) { 
 							IResponseTime responseTime = ((FeasibilityTestResponseTime) test.feasibilityTest).getResponseTime();
-							System.out.println(responseTime.printResponseTime(i, priorityOrder, orderedSet));
+							//System.out.println(responseTime.printResponseTime(i, priorityOrder, orderedSet));
 						}
 					}
 					
