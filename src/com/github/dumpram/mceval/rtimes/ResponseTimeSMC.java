@@ -61,9 +61,25 @@ public class ResponseTimeSMC implements IResponseTime {
 	}
 
 	@Override
-	public String printResponseTime(int i, HashMap<Integer, Integer> priorityOrder, MCTaskSet orderedSet) {
-		// TODO Auto-generated method stub
-		return null;
+	public String printResponseTime(int i, HashMap<Integer, Integer> priorityOrder, MCTaskSet set) {
+		String forExport = "";
+
+		List<MCTask> tasks = set.getTasks();
+		MCTask task = tasks.get(i);
+		int n = tasks.size();
+		int L = task.getL();
+		int C = task.getWCET(L);
+		int R = responseTime(i, set);
+
+		forExport += "R_" + (priorityOrder.get(i) + 1) + " = " + C + "+";
+
+		for (int j = 0; j < i; j++) {
+				MCTask taskJ = tasks.get(j);
+				forExport += "\\lceil\\frac{R_" + (priorityOrder.get(i) + 1) + "}{" + taskJ.getT() + "}\\rceil \\cdot"
+						+ taskJ.getWCET(Math.min(task.getL(), taskJ.getL())) + "+";
+		}
+
+		return forExport.substring(0, forExport.length() - 1) + " = " + R;
 	}
 
 }
