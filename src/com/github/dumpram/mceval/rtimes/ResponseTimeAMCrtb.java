@@ -128,8 +128,69 @@ public class ResponseTimeAMCrtb implements IResponseTime {
 	}
 
 	@Override
-	public String printResponseTime(int i, HashMap<Integer, Integer> priorityOrder, MCTaskSet orderedSet) {
-		// TODO Auto-generated method stub
-		return null;
+	public String printResponseTime(int i, HashMap<Integer, Integer> priorityOrder, MCTaskSet set) {
+		String forExport = "";
+
+		List<MCTask> tasks = set.getTasks();
+		MCTask task = tasks.get(i);
+		int n = tasks.size();
+		int L = task.getL();
+		int C = task.getWCET(L);
+		int CLO = task.getWCET(0);
+		int R = responseTime(i, set);
+		int RLO = responseTimeLO.responseTime(i, set);
+		int RHI = responseTimeHI.responseTime(i, set);
+		
+		int idx = priorityOrder.get(i);
+		
+		forExport += "\n";
+				
+		forExport += "R_" + (idx + 1) + "^{LO} = " + CLO + "+";
+
+		for (int j = 0; j < i; j++) {
+			MCTask taskJ = tasks.get(j);
+			forExport += "\\lceil\\frac{R_" + (idx + 1) + "}{" + taskJ.getT() + "}\\rceil \\cdot" + taskJ.getWCET(0)
+					+ "+";
+		}
+
+		forExport = forExport.substring(0, forExport.length() - 1) + " = " + RLO;
+
+		forExport += "\n";
+		
+		forExport += "R_" + (idx + 1) + "^{HI} = " + C + "+";
+
+		for (int j = 0; j < i; j++) {
+			if (tasks.get(j).getL() == 1) {
+				MCTask taskJ = tasks.get(j);
+				forExport += "\\lceil\\frac{R_" + (idx + 1) + "}{" + taskJ.getT() + "}\\rceil \\cdot" + taskJ.getWCET(1)
+						+ "+";
+			}
+		}
+		
+		forExport = forExport.substring(0, forExport.length() - 1) + " = " + RHI;
+		
+		forExport += "\n";
+		
+		//forExport += "R_" + (idx + 1) + "^{LO}= " + RLO + "," + "R_" + (idx + 1)
+		//		+ "^{MC} = " + C + "+";
+		
+		forExport += "R_" + (idx + 1) + "^{MC} = " + C + "+";
+
+		for (int j = 0; j < i; j++) {
+
+			MCTask taskJ = tasks.get(j);
+			if (taskJ.getL() == 0) {
+				forExport += "\\lceil\\frac{R_" + (idx + 1) + "^{LO}}{" + taskJ.getT() + "}\\rceil \\cdot"
+						+ taskJ.getWCET(0) + "+";
+			} else {
+				forExport += "\\lceil\\frac{R_" + (idx + 1) + "^{MC}}{" + taskJ.getT() + "}\\rceil \\cdot"
+						+ taskJ.getWCET(1) + "+";
+			}
+
+		}
+		
+		forExport = forExport.substring(0, forExport.length() - 1) + " = " + R;
+		
+		return forExport;
 	}
 }

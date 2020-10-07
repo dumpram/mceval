@@ -131,8 +131,9 @@ public class Examples {
 		}
 	}
 	
-	@Test
+	//@Test
 	public void findExampleSMCnovsSMC() {
+		// seed 3
 		TestItem smcno = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeSMCno()), 
 				new PriorityAssignmentOPA(new ResponseTimeSMCno()));
 
@@ -186,15 +187,16 @@ public class Examples {
 	
 	//@Test
 	public void findExampleAMCrtbvsSMC() {
-		TestItem amcrtb = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCrtb()), 
-				new PriorityAssignmentOPA(new ResponseTimeAMCrtb()));
-
+		// seed 3
 		TestItem smc = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeSMC()), 
 				new PriorityAssignmentOPA(new ResponseTimeSMC()));
+
+		TestItem amcrtb = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCrtb()), 
+				new PriorityAssignmentOPA(new ResponseTimeAMCrtb()));
 		
 		List<TestItem> tests = new ArrayList<TestItem>();
-		tests.add(amcrtb);
 		tests.add(smc);
+		tests.add(amcrtb);
 
 		double minimumUtilization = 0.5;
 		double maximumUtilization = 0.9;
@@ -219,15 +221,17 @@ public class Examples {
 			for (MCTaskSet set : _sets) {
 				if (!tests.get(0).testFeasibility(tests.get(0).priorityAssignment.assign(set)) && 
 						tests.get(1).testFeasibility(tests.get(1).priorityAssignment.assign(set))) {
+					System.out.println("Set found:");
 					System.out.println(set);
 					
 					for (TestItem test : tests) {
 						MCTaskSet orderedSet = test.priorityAssignment.assign(set);
-						HashMap<Integer, Integer> priorityOrder = test.priorityAssignment.getPriorityOrdering(set, orderedSet);
-						for (int i = 0; i < n; i++) { 
-							IResponseTime responseTime = ((FeasibilityTestResponseTime) test.feasibilityTest).getResponseTime();
-							System.out.println(responseTime.printResponseTime(i, priorityOrder, orderedSet));
-						}
+						System.out.println();
+//						HashMap<Integer, Integer> priorityOrder = test.priorityAssignment.getPriorityOrdering(set, orderedSet);
+//						for (int i = 0; i < n; i++) { 
+//							IResponseTime responseTime = ((FeasibilityTestResponseTime) test.feasibilityTest).getResponseTime();
+//							System.out.println(responseTime.printResponseTime(i, priorityOrder, orderedSet));
+//						}
 					}
 					
 					return;
@@ -236,7 +240,7 @@ public class Examples {
 		}
 	}
 	
-	//@Test
+	@Test
 	public void findExampleAMCrtbvsAMCmax() {
 		TestItem amcrtb = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCrtb()), 
 				new PriorityAssignmentOPA(new ResponseTimeAMCrtb()));
@@ -252,9 +256,9 @@ public class Examples {
 		double maximumUtilization = 0.9;
 		double utilizationIncrement = 0.1;
 		int n = 3;
-		int nsets = 1000;
+		int nsets = 10000;
 		int tmin = 2;
-		int tmax = 15;
+		int tmax = 20;
 		int criticality = 2;
 		int DC = 1;
 		int CF = 2;
@@ -271,15 +275,17 @@ public class Examples {
 			for (MCTaskSet set : _sets) {
 				if (!tests.get(0).testFeasibility(tests.get(0).priorityAssignment.assign(set)) && 
 						tests.get(1).testFeasibility(tests.get(1).priorityAssignment.assign(set))) {
+					System.out.println("Set found:");
 					System.out.println(set);
 					
 					for (TestItem test : tests) {
 						MCTaskSet orderedSet = test.priorityAssignment.assign(set);
-						HashMap<Integer, Integer> priorityOrder = test.priorityAssignment.getPriorityOrdering(set, orderedSet);
-						for (int i = 0; i < n; i++) { 
-							IResponseTime responseTime = ((FeasibilityTestResponseTime) test.feasibilityTest).getResponseTime();
-							System.out.println(responseTime.printResponseTime(i, priorityOrder, orderedSet));
-						}
+						System.out.println();
+//						HashMap<Integer, Integer> priorityOrder = test.priorityAssignment.getPriorityOrdering(set, orderedSet);
+//						for (int i = 0; i < n; i++) { 
+//							IResponseTime responseTime = ((FeasibilityTestResponseTime) test.feasibilityTest).getResponseTime();
+//							System.out.println(responseTime.printResponseTime(i, priorityOrder, orderedSet));
+//						}
 					}
 					
 					return;

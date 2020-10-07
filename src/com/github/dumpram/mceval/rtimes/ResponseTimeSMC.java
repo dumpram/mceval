@@ -66,7 +66,6 @@ public class ResponseTimeSMC implements IResponseTime {
 
 		List<MCTask> tasks = set.getTasks();
 		MCTask task = tasks.get(i);
-		int n = tasks.size();
 		int L = task.getL();
 		int C = task.getWCET(L);
 		int R = responseTime(i, set);
