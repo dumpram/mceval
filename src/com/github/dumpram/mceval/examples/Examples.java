@@ -12,6 +12,7 @@ import com.github.dumpram.mceval.assignments.PriorityAssignmentNOPA;
 import com.github.dumpram.mceval.assignments.PriorityAssignmentOPA;
 import com.github.dumpram.mceval.evaluation.TestItem;
 import com.github.dumpram.mceval.evaluation.TestUtils;
+import com.github.dumpram.mceval.ftests.FeasibilityTestEfficientExact;
 import com.github.dumpram.mceval.ftests.FeasibilityTestResponseTime;
 import com.github.dumpram.mceval.interfaces.IResponseTime;
 import com.github.dumpram.mceval.models.MCTaskSet;
@@ -240,8 +241,9 @@ public class Examples {
 		}
 	}
 	
-	@Test
+	//@Test
 	public void findExampleAMCrtbvsAMCmax() {
+		// seed 3
 		TestItem amcrtb = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCrtb()), 
 				new PriorityAssignmentOPA(new ResponseTimeAMCrtb()));
 
@@ -294,9 +296,9 @@ public class Examples {
 		}
 	}
 	
-	//@Test
+	@Test
 	public void findExampleExactvsAMCmax() {
-		TestItem exact = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeEfficientExact()), 
+		TestItem exact = new TestItem(new FeasibilityTestEfficientExact(), 
 				new PriorityAssignmentNOPA());
 
 		TestItem amcmax = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCmax()), 
@@ -312,7 +314,7 @@ public class Examples {
 		int n = 3;
 		int nsets = 1000;
 		int tmin = 2;
-		int tmax = 15;
+		int tmax = 8;
 		int criticality = 2;
 		int DC = 1;
 		int CF = 2;
@@ -329,16 +331,12 @@ public class Examples {
 			for (MCTaskSet set : _sets) {
 				if (!tests.get(0).testFeasibility(tests.get(0).priorityAssignment.assign(set)) && 
 						tests.get(1).testFeasibility(tests.get(1).priorityAssignment.assign(set))) {
+					System.out.println("Set found:");
 					System.out.println(set);
 					
-					for (TestItem test : tests) {
-						MCTaskSet orderedSet = test.priorityAssignment.assign(set);
-						HashMap<Integer, Integer> priorityOrder = test.priorityAssignment.getPriorityOrdering(set, orderedSet);
-						for (int i = 0; i < n; i++) { 
-							IResponseTime responseTime = ((FeasibilityTestResponseTime) test.feasibilityTest).getResponseTime();
-							System.out.println(responseTime.printResponseTime(i, priorityOrder, orderedSet));
-						}
-					}
+					amcmax.priorityAssignment.assign(set);
+					new FeasibilityTestEfficientExact().isFeasible(exact.priorityAssignment.assign(set));
+
 					
 					return;
 				}
