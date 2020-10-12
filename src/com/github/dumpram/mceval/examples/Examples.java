@@ -312,7 +312,7 @@ public class Examples {
 		double maximumUtilization = 0.9;
 		double utilizationIncrement = 0.1;
 		int n = 3;
-		int nsets = 1000;
+		int nsets = 100;
 		int tmin = 2;
 		int tmax = 8;
 		int criticality = 2;
@@ -336,6 +336,7 @@ public class Examples {
 					
 					amcmax.priorityAssignment.assign(set);
 					new FeasibilityTestEfficientExact().isFeasible(exact.priorityAssignment.assign(set));
+					System.out.println(exact.priorityAssignment.getPriorityOrdering(set, exact.priorityAssignment.assign(set)));
 
 					
 					return;
