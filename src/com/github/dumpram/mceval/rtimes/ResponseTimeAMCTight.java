@@ -67,7 +67,7 @@ public class ResponseTimeAMCTight implements IResponseTime {
 								}
 								if (ss < j && LJ == 0 /**&& s != 0**/) {
 									int Ts = taskS.getT();
-									if (Math.floor(1.0 * s / TJ) * TJ <= Math.floor(1.0 * s / Ts) * Ts) {
+									if (Math.floor(1.0 * s / TJ) * TJ >= Math.floor(1.0 * s / Ts) * Ts) {
 										t-=CLO;
 									} else if (Math.floor(1.0 * s / TJ) * TJ + CLO > s) {
 										t-=CLO;
