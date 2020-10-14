@@ -14,21 +14,21 @@ public class UUniFastDiscard {
 	private static Random rand = new Random();
 	
 	static {
-		rand.setSeed(3);
+		//rand.setSeed(3);
 	}
 	
 
 	public static List<MCTaskSet> generate(double u, int n, int nsets, int tmin, int tmax, int criticality) {
-		return generate(u, n, nsets, tmin, tmax, criticality, 1, 2.0, 0.5, 0.025, true, Integer.MAX_VALUE, null);
+		return generate(u, n, nsets, tmin, tmax, criticality, 1, 2.0, 0.5, 0.025, true, Integer.MAX_VALUE, null, new ArrayList<MCTaskSet>());
 	}
 	
 	public static List<MCTaskSet> generate(double u, int n, int nsets, int tmin, int tmax, int criticality, double DC,
 			double CF, double CP, double delta, boolean fixed) {
-		return generate(u, n, nsets, tmin, tmax, criticality, DC, CF, CP, delta, fixed, Integer.MAX_VALUE, null);
+		return generate(u, n, nsets, tmin, tmax, criticality, DC, CF, CP, delta, fixed, Integer.MAX_VALUE, null, new ArrayList<MCTaskSet>());
 	}
 
 	public static List<MCTaskSet> generate(double u, int n, int nsets, int tmin, int tmax, int criticality, double DC,
-			double CF, double CP, double delta, boolean fixed, int hyperperiodlimit, IFeasibilityTest test) {
+			double CF, double CP, double delta, boolean fixed, int hyperperiodlimit, IFeasibilityTest test, List<MCTaskSet> blacklist) {
 		List<MCTaskSet> systems = new ArrayList<MCTaskSet>();
 		List<List<Double>> u_sets = new ArrayList<List<Double>>();
 		List<List<Integer>> p_sets = new ArrayList<List<Integer>>();

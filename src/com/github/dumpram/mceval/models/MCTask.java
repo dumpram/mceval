@@ -93,4 +93,37 @@ public class MCTask {
 	public int[] getWCET() {
 		return C;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.hashCode(C);
+		result = prime * result + Arrays.hashCode(D);
+		result = prime * result + L;
+		result = prime * result + T;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		MCTask other = (MCTask) obj;
+		if (!Arrays.equals(C, other.C))
+			return false;
+		if (!Arrays.equals(D, other.D))
+			return false;
+		if (L != other.L)
+			return false;
+		if (T != other.T)
+			return false;
+		return true;
+	}
+	
+	
 }

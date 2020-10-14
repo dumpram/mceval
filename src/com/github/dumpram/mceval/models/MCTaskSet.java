@@ -213,4 +213,41 @@ public class MCTaskSet {
 		}
 		return count;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((tasks == null) ? 0 : tasks.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		MCTaskSet other = (MCTaskSet) obj;
+		if (tasks == null) {
+			if (other.tasks != null)
+				return false;
+		} else {
+			if (tasks.size() != other.tasks.size()) {
+				return false;
+			}
+			for (MCTask task : tasks) {
+				if (!other.tasks.contains(task)) {
+					return false;
+				}
+			}
+			
+		}
+			
+		return true;
+	}
+	
+	
 }

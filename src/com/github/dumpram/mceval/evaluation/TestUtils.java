@@ -83,10 +83,11 @@ public class TestUtils {
 			List<MCTaskSet> generated = new ArrayList<MCTaskSet>();
 			while (generated.size() < nsets) {
 				List<MCTaskSet> newOnes = UUniFastDiscard.generate(u, n, nsets - generated.size(), tmin, tmax,
-						criticality, DC, CF, CP, delta, fixed, hyperperiodlimit, filter);
+						criticality, DC, CF, CP, delta, fixed, hyperperiodlimit, filter, blacklist);
 				for (MCTaskSet set : newOnes) {
 					if (!generated.contains(set) && !blacklist.contains(set)) {
 						generated.add(set);
+						blacklist.add(set);
 					}
 				}
 				System.out.println("Generating task sets for u = " + u + ": "

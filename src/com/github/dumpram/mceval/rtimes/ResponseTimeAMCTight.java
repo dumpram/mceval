@@ -49,11 +49,17 @@ public class ResponseTimeAMCTight implements IResponseTime {
 				MCTask taskS = tasks.get(ss);
 				if (!(taskS.getL() == 0 || ss > i)) {
 					for (Integer s : S) {
+						int Ts = taskS.getT();
+						int Ds = taskS.getD();
+						int Cs = taskS.getWCET(0);
+
+						if (Math.floor(1.0 * s / Ts) * Ts + Ds < s) {
+							//continue;
+						}
 						R = 0;
 						t = C;
 						while (R != t && R <= D /**&&t >= C**/) {
 							R = t;
-							int kappa = 0;
 							t = C;
 							for (int j = 0; j < i; j++) {
 								MCTask taskJ = tasks.get(j);
@@ -65,14 +71,12 @@ public class ResponseTimeAMCTight implements IResponseTime {
 								if (LJ == 0) {
 									t += ((int) Math.floor(1.0 * s / TJ) + 1) * CLO;
 								}
-								if (ss < j && LJ == 0 /**&& s != 0**/) {
-									int Ts = taskS.getT();
+								if (ss < j && LJ == 0) {
 									if (Math.floor(1.0 * s / TJ) * TJ >= Math.floor(1.0 * s / Ts) * Ts) {
-										t-=CLO;
-									} else if (Math.floor(1.0 * s / TJ) * TJ + CLO > s) {
-										t-=CLO;
-										int Cs = taskS.getWCET(0);
-										t += Math.max((s - Cs) - Math.floor(1.0 * s / TJ) * TJ, 0);
+										//t-=CLO;
+									} else {
+									//	t-=CLO;
+										//t += Math.min(Math.floor(1.0 * s / Ts) * Ts - Math.floor(1.0 * s / TJ) * TJ, CLO);
 									}
 								} 
 								if (j < ss && LJ == 1) {
@@ -84,7 +88,6 @@ public class ResponseTimeAMCTight implements IResponseTime {
 									t += (m * CHI + ((int) Math.ceil(1.0 * R / TJ) - m) * CLO);
 								}
 							}
-							t -= kappa;
 						}
 						if (R > Rmax) {
 							Rmax = R;
