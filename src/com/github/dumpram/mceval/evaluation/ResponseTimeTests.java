@@ -31,13 +31,13 @@ public class ResponseTimeTests {
 		tests.add(exactrt);
 		//tests.add(exactsp);
 
-		double minimumUtilization = 0.5;
-		double maximumUtilization = 0.9;
-		double utilizationIncrement = 0.1;
-		int n = 100;
+		double minimumUtilization = 0.1;
+		double maximumUtilization = 0.95;
+		double utilizationIncrement = 0.05;
+		int n = 4;
 		int nsets = 1000;
-		int tmin = 2;
-		int tmax = 10000;
+		int tmin = 10;
+		int tmax = 1000;
 		int criticality = 2;
 		int DC = 1;
 		int CF = 2;

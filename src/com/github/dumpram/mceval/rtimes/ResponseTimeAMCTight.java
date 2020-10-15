@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.github.dumpram.mceval.interfaces.IResponseTime;
+import com.github.dumpram.mceval.misc.MiscFunctions;
 import com.github.dumpram.mceval.models.MCTask;
 import com.github.dumpram.mceval.models.MCTaskSet;
 
@@ -52,10 +53,8 @@ public class ResponseTimeAMCTight implements IResponseTime {
 						int Ts = taskS.getT();
 						int Ds = taskS.getD();
 						int Cs = taskS.getWCET(0);
-
-						if (Math.floor(1.0 * s / Ts) * Ts + Ds < s) {
-							//continue;
-						}
+						int ks = (int) Math.floor(1.0 * s / Ts);
+						
 						R = 0;
 						t = C;
 						while (R != t && R <= D /**&&t >= C**/) {
@@ -68,15 +67,16 @@ public class ResponseTimeAMCTight implements IResponseTime {
 								int CLO = taskJ.getWCET(0);
 								int TJ = taskJ.getT();
 								int DJ = taskJ.getD();
+								int KJ = (int) Math.floor(1.0 * s / TJ);
 								if (LJ == 0) {
 									t += ((int) Math.floor(1.0 * s / TJ) + 1) * CLO;
 								}
 								if (ss < j && LJ == 0) {
 									if (Math.floor(1.0 * s / TJ) * TJ >= Math.floor(1.0 * s / Ts) * Ts) {
-										//t-=CLO;
+										t-=CLO;
 									} else {
-									//	t-=CLO;
-										//t += Math.min(Math.floor(1.0 * s / Ts) * Ts - Math.floor(1.0 * s / TJ) * TJ, CLO);
+										t-=CLO;
+										t += Math.min(Math.floor(1.0 * s / Ts) * Ts - Math.floor(1.0 * s / TJ) * TJ, CLO);
 									}
 								} 
 								if (j < ss && LJ == 1) {

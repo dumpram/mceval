@@ -14,7 +14,7 @@ public class UUniFastDiscard {
 	private static Random rand = new Random();
 	
 	static {
-		//rand.setSeed(3);
+		rand.setSeed(3);
 	}
 	
 
