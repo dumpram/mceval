@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.github.dumpram.mceval.interfaces.IResponseTime;
-import com.github.dumpram.mceval.misc.MiscFunctions;
 import com.github.dumpram.mceval.models.MCTask;
 import com.github.dumpram.mceval.models.MCTaskSet;
 
@@ -50,14 +49,12 @@ public class ResponseTimeAMCTight implements IResponseTime {
 				MCTask taskS = tasks.get(ss);
 				if (!(taskS.getL() == 0 || ss > i)) {
 					for (Integer s : S) {
-						int Ts = taskS.getT();
-						int Ds = taskS.getD();
-						int Cs = taskS.getWCET(0);
-						int ks = (int) Math.floor(1.0 * s / Ts);
+						int TS = taskS.getT();
+						int	KS = (int) Math.floor(1.0 * s / TS);
 						
 						R = 0;
 						t = C;
-						while (R != t && R <= D /**&&t >= C**/) {
+						while (R != t && R <= D) {
 							R = t;
 							t = C;
 							for (int j = 0; j < i; j++) {
@@ -69,21 +66,20 @@ public class ResponseTimeAMCTight implements IResponseTime {
 								int DJ = taskJ.getD();
 								int KJ = (int) Math.floor(1.0 * s / TJ);
 								if (LJ == 0) {
-									t += ((int) Math.floor(1.0 * s / TJ) + 1) * CLO;
+									t += (KJ + 1) * CLO;
 								}
 								if (ss < j && LJ == 0) {
-									if (Math.floor(1.0 * s / TJ) * TJ >= Math.floor(1.0 * s / Ts) * Ts) {
+									if (KJ * TJ >= KS * TS) {
 										t-=CLO;
 									} else {
 										t-=CLO;
-										t += Math.min(Math.floor(1.0 * s / Ts) * Ts - Math.floor(1.0 * s / TJ) * TJ, CLO);
+										t += Math.min(KS * TS - KJ * TJ, CLO);
 									}
 								} 
 								if (j < ss && LJ == 1) {
 									int m = getm(TJ, DJ, s, R);
 									t += (m * CHI + ((int) Math.ceil(1.0 * R / TJ) - m) * CLO);
-								}
-								if (j >= ss && LJ == 1) {
+								} else if (j >= ss && LJ == 1) {
 									int m = getM(TJ, DJ, s, R);
 									t += (m * CHI + ((int) Math.ceil(1.0 * R / TJ) - m) * CLO);
 								}
@@ -102,10 +98,6 @@ public class ResponseTimeAMCTight implements IResponseTime {
 
 	private int getM(int Tk, int Dk, Integer s, int t) {
 		return Math.min((int) Math.ceil((((double) (t - s - (Tk - Dk))) / Tk) + 1), (int) Math.ceil(((double) t) / Tk));
-	}
-	
-	private int getMm(int Tk, int Dk, Integer s, int t) {
-		return Math.max(0, -1 + Math.min((int) Math.ceil((((double) (t - s - (Tk - Dk))) / Tk) + 1), (int) Math.ceil(((double) t) / Tk)));
 	}
 
 	private int getm(int Tk, int Dk, Integer s, int t) {
@@ -127,6 +119,51 @@ public class ResponseTimeAMCTight implements IResponseTime {
 				}
 			}
 		}
+		return forExport;
+	}
+	
+	@SuppressWarnings("unused")
+	private List<Integer> getSfromS(int s, MCTaskSet set, int r_lo) {
+		List<Integer> forExport = new ArrayList<Integer>();
+		List<MCTask> tasks = set.getTasks();
+		MCTask taskS = tasks.get(s);
+		int Ts = taskS.getT();
+		int Cs = taskS.getWCET(0);
+		int Cshi = taskS.getWCET(1);
+		int Ds = taskS.getD();
+//		List<Integer> forbidden = new ArrayList<Integer>();
+//		for (int j = 0; j < s; j++) {
+//			int Tj = tasks.get(j).getT();
+//			int Cj = tasks.get(j).getWCET(0);
+//			for (int k = 0; k * Tj < r_lo; k++) {
+//				for (int p = k * Tj; p < r_lo && p < k * Tj + Cj; p++) {
+//					forbidden.add(p);
+//				}
+//			}
+//		}
+		for (int k = 0; k * Ts < r_lo; k++) {
+//			if(k * Ts + Ds - (Cshi - Cs) < r_lo) {
+//				forExport.add(k * Ts + Ds - (Cshi - Cs));
+//				forExport.add(k * Ts + Cs);
+//			}
+			for (int j = k * Ts + Cs; j < k * Ts + Ds - (Cshi - Cs) && j < r_lo; j++) {
+				boolean flag = true;
+				for (int hp = 0; hp < s; hp++) {
+					MCTask taskhp = tasks.get(hp);
+					int Thp = taskhp.getT();
+					int Chp = taskhp.getWCET(0);
+					if (j % Thp < Chp) { 
+						flag = false;
+						break;
+					}
+				}
+				if (flag) {
+					forExport.add(j);
+				}
+			}
+		}
+	
+		
 		return forExport;
 	}
 
