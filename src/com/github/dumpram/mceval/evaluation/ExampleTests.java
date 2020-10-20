@@ -11,6 +11,7 @@ import com.github.dumpram.mceval.assignments.PriorityAssignmentOPA;
 import com.github.dumpram.mceval.ftests.FeasibilityTestEfficientExact;
 import com.github.dumpram.mceval.ftests.FeasibilityTestResponseTime;
 import com.github.dumpram.mceval.ftests.FeasibilityTestUBHL;
+import com.github.dumpram.mceval.interfaces.IResponseTime;
 import com.github.dumpram.mceval.models.MCTask;
 import com.github.dumpram.mceval.models.MCTaskSet;
 import com.github.dumpram.mceval.rtimes.ResponseTimeAMCTight;
@@ -19,7 +20,7 @@ import com.github.dumpram.mceval.rtimes.ResponseTimeExactPeriodic;
 
 public class ExampleTests {
 
-	@Test
+	//@Test
 	public void Example1() {
 		List<MCTask> tasks = new ArrayList<MCTask>();
 
@@ -56,7 +57,7 @@ public class ExampleTests {
 
 		// pocetni skup D(HI) = D(LO)
 		tasks.add(new MCTask(new int[] { 1, 2 }, 10, new int[] { 10, 10 }, 1)); // 7 7
-		tasks.add(new MCTask(new int[] { 1, 1 }, 5, new int[] { 2, 2 }, 0)); // 4 4
+		tasks.add(new MCTask(new int[] { 1, 1 }, 5, new int[] { 5, 5 }, 0)); // 4 4
 		tasks.add(new MCTask(new int[] { 4, 8 }, 13, new int[] { 13, 13 }, 1)); // 9 9
 
 		MCTaskSet set = new MCTaskSet(tasks);
@@ -69,19 +70,26 @@ public class ExampleTests {
 		TestItem amctight = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCTight()),
 				new PriorityAssignmentNOPA());
 		
-		tests.add(ubhl);
+		//tests.add(ubhl);
 		tests.add(amcmax);
-		tests.add(exact);
+		//tests.add(exact);
 		tests.add(amctight);
 		
 		for (TestItem test : tests) {
 			System.out.println(test.feasibilityTest.toString() + " " + test.feasibilityTest.isFeasible(set));
 		}
 		
+		amcmax.priorityAssignment.assign(set);
+		MCTaskSet orderedSet = amctight.priorityAssignment.assign(set);
+		for (int i = 0; i < 3; i++) {
+			IResponseTime test = ((FeasibilityTestResponseTime) amctight.feasibilityTest).getResponseTime();
+			System.out.println(test.responseTime(i, orderedSet));
+		}
+		
 	}
 	
 	
-	@Test
+	//@Test
 	public void CounterExample1() {
 		List<MCTask> tasks = new ArrayList<MCTask>();
 
@@ -111,7 +119,7 @@ public class ExampleTests {
 		
 	}
 	
-	@Test
+	//@Test
 	public void CounterExample2() {
 		List<MCTask> tasks = new ArrayList<MCTask>();
 
