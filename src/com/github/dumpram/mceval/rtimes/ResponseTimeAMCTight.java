@@ -13,6 +13,10 @@ public class ResponseTimeAMCTight implements IResponseTime {
 	private IResponseTime responseTimeHI = new ResponseTimeHI();
 
 	private IResponseTime responseTimeLO = new ResponseTimeLO();
+	
+	private int smax;
+	
+	private int M;
 
 	@Override
 	public int responseTime(int i, MCTaskSet set) {
@@ -86,6 +90,7 @@ public class ResponseTimeAMCTight implements IResponseTime {
 							}
 						}
 						if (R > Rmax) {
+							smax = s;
 							Rmax = R;
 						}
 					}
@@ -131,21 +136,8 @@ public class ResponseTimeAMCTight implements IResponseTime {
 		int Cs = taskS.getWCET(0);
 		int Cshi = taskS.getWCET(1);
 		int Ds = taskS.getD();
-//		List<Integer> forbidden = new ArrayList<Integer>();
-//		for (int j = 0; j < s; j++) {
-//			int Tj = tasks.get(j).getT();
-//			int Cj = tasks.get(j).getWCET(0);
-//			for (int k = 0; k * Tj < r_lo; k++) {
-//				for (int p = k * Tj; p < r_lo && p < k * Tj + Cj; p++) {
-//					forbidden.add(p);
-//				}
-//			}
-//		}
+
 		for (int k = 0; k * Ts < r_lo; k++) {
-//			if(k * Ts + Ds - (Cshi - Cs) < r_lo) {
-//				forExport.add(k * Ts + Ds - (Cshi - Cs));
-//				forExport.add(k * Ts + Cs);
-//			}
 			for (int j = k * Ts + Cs; j < k * Ts + Ds - (Cshi - Cs) && j < r_lo; j++) {
 				boolean flag = true;
 				for (int hp = 0; hp < s; hp++) {

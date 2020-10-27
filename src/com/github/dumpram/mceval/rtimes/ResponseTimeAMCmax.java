@@ -62,6 +62,7 @@ public class ResponseTimeAMCmax implements IResponseTime {
 			}
 			if (R > Rmax) {
 				Rmax = R;
+				smax = s;
 				M = m;
 			}
 		}
@@ -111,7 +112,6 @@ public class ResponseTimeAMCmax implements IResponseTime {
 
 		List<MCTask> tasks = set.getTasks();
 		MCTask task = tasks.get(i);
-		int n = tasks.size();
 		int L = task.getL();
 		int C = task.getWCET(L);
 		int CLO = task.getWCET(0);
@@ -149,9 +149,6 @@ public class ResponseTimeAMCmax implements IResponseTime {
 		
 		forExport += "\n";
 		
-		//forExport += "R_" + (idx + 1) + "^{LO}= " + RLO + "," + "R_" + (idx + 1)
-		//		+ "^{MC} = " + C + "+";
-		
 		forExport += "R_" + (idx + 1) + "^{MC} = " + C + "+";
 
 		for (int j = 0; j < i; j++) {
@@ -161,7 +158,7 @@ public class ResponseTimeAMCmax implements IResponseTime {
 				forExport += "\\bigg(\\bigg\\lfloor\\frac{" + smax + "}{" + taskJ.getT() + "}\\bigg\\rfloor + 1 \\bigg) \\cdot"
 						+ taskJ.getWCET(0) + "+";
 			} else {
-				forExport += M + "\\cdot " + taskJ.getWCET(0) + " + \\bigg(\\lceil\\frac{R_" + (idx + 1) + "^{MC}}{" + taskJ.getT() + "}\\rceil - " + M + "\\bigg) \\cdot"
+				forExport += M + "\\cdot " + taskJ.getWCET(1) + " + \\bigg(\\lceil\\frac{R_" + (idx + 1) + "^{MC}}{" + taskJ.getT() + "}\\rceil - " + M + "\\bigg) \\cdot"
 						+ taskJ.getWCET(0) + "+";
 			}
 

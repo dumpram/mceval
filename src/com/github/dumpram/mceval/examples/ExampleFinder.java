@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.junit.jupiter.api.Test;
-
 import com.github.dumpram.mceval.assignments.PriorityAssignmentCrMPO;
 import com.github.dumpram.mceval.assignments.PriorityAssignmentDM;
 import com.github.dumpram.mceval.assignments.PriorityAssignmentNOPA;
@@ -19,12 +17,11 @@ import com.github.dumpram.mceval.models.MCTaskSet;
 import com.github.dumpram.mceval.rtimes.ResponseTimeAMCmax;
 import com.github.dumpram.mceval.rtimes.ResponseTimeAMCrtb;
 import com.github.dumpram.mceval.rtimes.ResponseTimeClassic;
-import com.github.dumpram.mceval.rtimes.ResponseTimeEfficientExact;
 import com.github.dumpram.mceval.rtimes.ResponseTimeSMC;
 import com.github.dumpram.mceval.rtimes.ResponseTimeSMCno;
 import com.github.sh0nk.matplotlib4j.NumpyUtils;
 
-public class Examples {
+public class ExampleFinder {
 
 	//@Test
 	public void findExamplePCvsMC() {
@@ -118,12 +115,7 @@ public class Examples {
 					System.out.println(set);
 					
 					for (TestItem test : tests) {
-						MCTaskSet orderedSet = test.priorityAssignment.assign(set);
-						HashMap<Integer, Integer> priorityOrder = test.priorityAssignment.getPriorityOrdering(set, orderedSet);
-						for (int i = 0; i < n; i++) { 
-							IResponseTime responseTime = ((FeasibilityTestResponseTime) test.feasibilityTest).getResponseTime();
-							//System.out.println(responseTime.printResponseTime(i, priorityOrder, orderedSet));
-						}
+						test.priorityAssignment.assign(set);
 					}
 					
 					return;
@@ -171,13 +163,8 @@ public class Examples {
 					System.out.println(set);
 					System.out.println("Task set found:\n\n\n\n");
 					for (TestItem test : tests) {
-						MCTaskSet orderedSet = test.priorityAssignment.assign(set);
+						test.priorityAssignment.assign(set);
 						System.out.println();
-//						HashMap<Integer, Integer> priorityOrder = test.priorityAssignment.getPriorityOrdering(set, orderedSet);
-//						for (int i = 0; i < n; i++) { 
-//							IResponseTime responseTime = ((FeasibilityTestResponseTime) test.feasibilityTest).getResponseTime();
-//							System.out.println(responseTime.printResponseTime(i, priorityOrder, orderedSet));
-//						}
 					}
 					
 					return;
@@ -226,13 +213,8 @@ public class Examples {
 					System.out.println(set);
 					
 					for (TestItem test : tests) {
-						MCTaskSet orderedSet = test.priorityAssignment.assign(set);
+						test.priorityAssignment.assign(set);
 						System.out.println();
-//						HashMap<Integer, Integer> priorityOrder = test.priorityAssignment.getPriorityOrdering(set, orderedSet);
-//						for (int i = 0; i < n; i++) { 
-//							IResponseTime responseTime = ((FeasibilityTestResponseTime) test.feasibilityTest).getResponseTime();
-//							System.out.println(responseTime.printResponseTime(i, priorityOrder, orderedSet));
-//						}
 					}
 					
 					return;
@@ -281,13 +263,8 @@ public class Examples {
 					System.out.println(set);
 					
 					for (TestItem test : tests) {
-						MCTaskSet orderedSet = test.priorityAssignment.assign(set);
+						test.priorityAssignment.assign(set);
 						System.out.println();
-//						HashMap<Integer, Integer> priorityOrder = test.priorityAssignment.getPriorityOrdering(set, orderedSet);
-//						for (int i = 0; i < n; i++) { 
-//							IResponseTime responseTime = ((FeasibilityTestResponseTime) test.feasibilityTest).getResponseTime();
-//							System.out.println(responseTime.printResponseTime(i, priorityOrder, orderedSet));
-//						}
 					}
 					
 					return;
@@ -296,7 +273,7 @@ public class Examples {
 		}
 	}
 	
-	@Test
+	//@Test
 	public void findExampleExactvsAMCmax() {
 		TestItem exact = new TestItem(new FeasibilityTestEfficientExact(), 
 				new PriorityAssignmentNOPA());
@@ -314,7 +291,7 @@ public class Examples {
 		int n = 3;
 		int nsets = 100;
 		int tmin = 2;
-		int tmax = 8;
+		int tmax = 15;
 		int criticality = 2;
 		int DC = 1;
 		int CF = 2;

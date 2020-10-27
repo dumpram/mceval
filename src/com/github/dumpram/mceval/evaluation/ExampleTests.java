@@ -16,6 +16,7 @@ import com.github.dumpram.mceval.models.MCTask;
 import com.github.dumpram.mceval.models.MCTaskSet;
 import com.github.dumpram.mceval.rtimes.ResponseTimeAMCTight;
 import com.github.dumpram.mceval.rtimes.ResponseTimeAMCmax;
+import com.github.dumpram.mceval.rtimes.ResponseTimeAMCrtb;
 import com.github.dumpram.mceval.rtimes.ResponseTimeExactPeriodic;
 
 public class ExampleTests {
@@ -151,5 +152,70 @@ public class ExampleTests {
 		}
 		
 	}
+	
+	//@Test
+	public void Example7() {
+		List<MCTask> tasks = new ArrayList<MCTask>();
+
+		// pocetni skup D(HI) = D(LO)
+		tasks.add(new MCTask(new int[] { 3, 6 }, 18, new int[] { 18, 18 }, 1)); // 7 7
+		tasks.add(new MCTask(new int[] { 1, 2 }, 4, new int[] { 4, 4 }, 1)); // 4 4
+		tasks.add(new MCTask(new int[] { 1, 2 }, 3, new int[] { 3, 3 }, 0)); // 9 9
+
+		MCTaskSet set = new MCTaskSet(tasks);
+
+		List<TestItem> tests = new ArrayList<TestItem>();
+		TestItem amcmax = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCmax()), new PriorityAssignmentOPA(new
+				ResponseTimeAMCmax()));
+		TestItem amcrtb = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCrtb()),
+				new PriorityAssignmentOPA(new ResponseTimeAMCrtb()));
+		
+		//tests.add(ubhl);
+		tests.add(amcmax);
+		//tests.add(exact);
+		tests.add(amcrtb);
+		
+		for (TestItem test : tests) {
+			System.out.println(test.feasibilityTest.toString() + " " + test.feasibilityTest.isFeasible(set));
+		}
+		
+		
+		amcrtb.priorityAssignment.assign(set);
+		System.out.println();
+		amcmax.priorityAssignment.assign(set);
+	}
+	
+	//@Test
+	public void Example8() {
+		List<MCTask> tasks = new ArrayList<MCTask>();
+
+		// pocetni skup D(HI) = D(LO)
+		tasks.add(new MCTask(new int[] { 1, 2 }, 5, new int[] { 5, 5 }, 1)); // 7 7
+		tasks.add(new MCTask(new int[] { 1, 2 }, 2, new int[] { 2, 2 }, 0)); // 4 4
+		tasks.add(new MCTask(new int[] { 1, 2 }, 7, new int[] { 7, 7 }, 1)); // 9 9
+
+		MCTaskSet set = new MCTaskSet(tasks);
+
+		List<TestItem> tests = new ArrayList<TestItem>();
+		TestItem amcmax = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCmax()), new PriorityAssignmentOPA(new
+				ResponseTimeAMCmax()));
+		TestItem exact = new TestItem(new FeasibilityTestEfficientExact(),
+				new PriorityAssignmentNOPA());
+		
+		
+		tests.add(amcmax);
+		tests.add(exact);
+		
+		
+		for (TestItem test : tests) {
+			System.out.println(test.feasibilityTest.toString() + " " + test.feasibilityTest.isFeasible(set));
+		}
+		
+		
+		amcmax.priorityAssignment.assign(set);
+		System.out.println();
+		exact.priorityAssignment.assign(set);
+	}
+
 
 }

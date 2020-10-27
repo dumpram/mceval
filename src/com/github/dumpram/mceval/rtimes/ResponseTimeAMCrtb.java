@@ -133,7 +133,6 @@ public class ResponseTimeAMCrtb implements IResponseTime {
 
 		List<MCTask> tasks = set.getTasks();
 		MCTask task = tasks.get(i);
-		int n = tasks.size();
 		int L = task.getL();
 		int C = task.getWCET(L);
 		int CLO = task.getWCET(0);
@@ -170,9 +169,6 @@ public class ResponseTimeAMCrtb implements IResponseTime {
 		forExport = forExport.substring(0, forExport.length() - 1) + " = " + RHI;
 		
 		forExport += "\n";
-		
-		//forExport += "R_" + (idx + 1) + "^{LO}= " + RLO + "," + "R_" + (idx + 1)
-		//		+ "^{MC} = " + C + "+";
 		
 		forExport += "R_" + (idx + 1) + "^{MC} = " + C + "+";
 

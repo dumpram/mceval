@@ -13,7 +13,6 @@ public class ResponseTimeSMCno implements IResponseTime {
 	public int responseTime(int i, MCTaskSet set) {
 		List<MCTask> tasks = set.getTasks();
 		MCTask task = tasks.get(i);
-		int n = tasks.size();
 		int R = 0;
 		int L = task.getL();
 		int C = task.getWCET(L);
@@ -28,8 +27,6 @@ public class ResponseTimeSMCno implements IResponseTime {
 				t = (int) (t + (int) Math.ceil((double) R / taskJ.getT()) * taskJ.getWCET(task.getL()));
 			}
 		}
-
-		// System.out.println(printResponseTime(i, set, p, R));
 		return R;
 	}
 
@@ -66,7 +63,6 @@ public class ResponseTimeSMCno implements IResponseTime {
 
 		List<MCTask> tasks = set.getTasks();
 		MCTask task = tasks.get(i);
-		int n = tasks.size();
 		int L = task.getL();
 		int C = task.getWCET(L);
 		int R = responseTime(i, set);
