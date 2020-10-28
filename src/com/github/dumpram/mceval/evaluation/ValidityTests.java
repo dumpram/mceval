@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
+import com.github.dumpram.mceval.assignments.PriorityAssignmentCrMPO;
 import com.github.dumpram.mceval.assignments.PriorityAssignmentDM;
 import com.github.dumpram.mceval.assignments.PriorityAssignmentDynamic;
 import com.github.dumpram.mceval.assignments.PriorityAssignmentNOPA;
@@ -22,30 +23,42 @@ import com.github.dumpram.mceval.ftests.FeasibilityTestUBHL;
 import com.github.dumpram.mceval.models.MCTaskSet;
 import com.github.dumpram.mceval.rtimes.ResponseTimeAMCTight;
 import com.github.dumpram.mceval.rtimes.ResponseTimeAMCmax;
+import com.github.dumpram.mceval.rtimes.ResponseTimeAMCrtb;
+import com.github.dumpram.mceval.rtimes.ResponseTimeClassic;
 import com.github.sh0nk.matplotlib4j.PythonExecutionException;
 
 public class ValidityTests {
 
-	//@Test
+	@Test
 	public void testDominanceWithRandomAssignmentImplicit() throws IOException, PythonExecutionException {
 		List<TestItem> tests = new ArrayList<TestItem>();
+		TestItem crmpa = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeClassic()),
+				new PriorityAssignmentCrMPO());
+		TestItem dmpa = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeClassic()),
+				new PriorityAssignmentDM());
 		TestItem ubhl = new TestItem(new FeasibilityTestUBHL(), new PriorityAssignmentDM());
-		TestItem amcmax = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCmax()), new PriorityAssignmentDynamic());
+		TestItem amcmax = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCmax()),
+				new PriorityAssignmentDynamic());
+		TestItem amcrtb = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCrtb()),
+				new PriorityAssignmentDynamic());
 		TestItem exact = new TestItem(new FeasibilityTestEfficientExact(), new PriorityAssignmentDynamic());
 		TestItem amctight = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCTight()),
 				new PriorityAssignmentDynamic());
+		tests.add(crmpa);
+		tests.add(dmpa);
 		tests.add(ubhl);
 		tests.add(amcmax);
+		tests.add(amcrtb);
 		tests.add(exact);
 		tests.add(amctight);
 
 		double minimumUtilization = 0.1;
 		double maximumUtilization = 0.9;
 		double utilizationIncrement = 0.05;
-		int n = 6;
-		int nsets = 1000;
-		int tmin = 10;
-		int tmax = 100;
+		int n = 3;
+		int nsets = 10;
+		int tmin = 2;
+		int tmax = 30;
 		int criticality = 2;
 		int DC = 1;
 		int CF = 2;
@@ -53,19 +66,35 @@ public class ValidityTests {
 		double delta = utilizationIncrement / 2;
 		boolean fixed = true;
 
-		TestUtils.runTest(tests, minimumUtilization, maximumUtilization, utilizationIncrement, n, nsets, tmin, tmax, criticality,
-				DC, CF, CP, delta, fixed);
-		
-		assertTrue(amcmax.score() <= amctight.score() && amcmax.score() <= exact.score() && amcmax.score() <= ubhl.score());
+		TestUtils.runTest(tests, minimumUtilization, maximumUtilization, utilizationIncrement, n, nsets, tmin, tmax,
+				criticality, DC, CF, CP, delta, fixed, null);
+
+		System.out.println(amcrtb.score());
+		System.out.println(amcmax.score());
+		System.out.println(amctight.score());
+		System.out.println(exact.score());
+		System.out.println(ubhl.score());
+
+		for (MCTaskSet set : amcmax.schedulableSets) {
+			if (!exact.schedulableSets.contains(set)) {
+				System.out.println(set);
+				exact.feasibilityTest.isFeasible(set);
+				return;
+			}
+		}
+
+		assertTrue(amcmax.score() <= amctight.score() && amcmax.score() <= exact.score()
+				&& amcmax.score() <= ubhl.score());
 		assertTrue(amctight.score() <= exact.score() && amctight.score() <= ubhl.score());
 		assertTrue(exact.score() <= ubhl.score());
 	}
 
-	//@Test
+	// @Test
 	public void testDominanceWithRandomAssignmentConstrained() {
 		List<TestItem> tests = new ArrayList<TestItem>();
 		TestItem ubhl = new TestItem(new FeasibilityTestUBHL(), new PriorityAssignmentDM());
-		TestItem amcmax = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCmax()), new PriorityAssignmentDynamic());
+		TestItem amcmax = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCmax()),
+				new PriorityAssignmentDynamic());
 		TestItem exact = new TestItem(new FeasibilityTestEfficientExact(), new PriorityAssignmentDynamic());
 		TestItem amctight = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCTight()),
 				new PriorityAssignmentDynamic());
@@ -88,20 +117,21 @@ public class ValidityTests {
 		double delta = utilizationIncrement / 2;
 		boolean fixed = true;
 
-		TestUtils.runTest(tests, minimumUtilization, maximumUtilization, utilizationIncrement, n, nsets, tmin, tmax, criticality,
-				DC, CF, CP, delta, fixed);
-		
-		assertTrue(amcmax.score() <= amctight.score() && amcmax.score() <= exact.score() && amcmax.score() <= ubhl.score());
+		TestUtils.runTest(tests, minimumUtilization, maximumUtilization, utilizationIncrement, n, nsets, tmin, tmax,
+				criticality, DC, CF, CP, delta, fixed, null);
+
+		assertTrue(amcmax.score() <= amctight.score() && amcmax.score() <= exact.score()
+				&& amcmax.score() <= ubhl.score());
 		assertTrue(amctight.score() <= exact.score() && amctight.score() <= ubhl.score());
 		assertTrue(exact.score() <= ubhl.score());
 	}
 
-	//@Test
+	// @Test
 	public void testDominanceWithTheBestAssignmentImplicit() {
 		List<TestItem> tests = new ArrayList<TestItem>();
 		TestItem ubhl = new TestItem(new FeasibilityTestUBHL(), new PriorityAssignmentDM());
-		TestItem amcmax = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCmax()), new PriorityAssignmentOPA(new
-				ResponseTimeAMCmax()));
+		TestItem amcmax = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCmax()),
+				new PriorityAssignmentOPA(new ResponseTimeAMCmax()));
 		TestItem exact = new TestItem(new FeasibilityTestEfficientExact(), new PriorityAssignmentNOPA());
 		TestItem amctight = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCTight()),
 				new PriorityAssignmentNOPA());
@@ -124,20 +154,26 @@ public class ValidityTests {
 		double delta = utilizationIncrement / 2;
 		boolean fixed = true;
 
-		TestUtils.runTest(tests, minimumUtilization, maximumUtilization, utilizationIncrement, n, nsets, tmin, tmax, criticality,
-				DC, CF, CP, delta, fixed);
-		
-		assertTrue(amcmax.score() <= amctight.score() && amcmax.score() <= exact.score() && amcmax.score() <= ubhl.score());
+		TestUtils.runTest(tests, minimumUtilization, maximumUtilization, utilizationIncrement, n, nsets, tmin, tmax,
+				criticality, DC, CF, CP, delta, fixed, null);
+
+		System.out.println(amcmax.score());
+		System.out.println(amctight.score());
+		System.out.println(exact.score());
+		System.out.println(ubhl.score());
+
+		assertTrue(amcmax.score() <= amctight.score() && amcmax.score() <= exact.score()
+				&& amcmax.score() <= ubhl.score());
 		assertTrue(amctight.score() <= exact.score() && amctight.score() <= ubhl.score());
 		assertTrue(exact.score() <= ubhl.score());
 	}
 
-	//@Test
+	// @Test
 	public void testDominanceWithTheBestAssignmentConstrained() {
 		List<TestItem> tests = new ArrayList<TestItem>();
 		TestItem ubhl = new TestItem(new FeasibilityTestUBHL(), new PriorityAssignmentDM());
-		TestItem amcmax = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCmax()), new PriorityAssignmentOPA(new
-				ResponseTimeAMCmax()));
+		TestItem amcmax = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCmax()),
+				new PriorityAssignmentOPA(new ResponseTimeAMCmax()));
 		TestItem exact = new TestItem(new FeasibilityTestEfficientExact(), new PriorityAssignmentNOPA());
 		TestItem amctight = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCTight()),
 				new PriorityAssignmentNOPA());
@@ -160,20 +196,21 @@ public class ValidityTests {
 		double delta = utilizationIncrement / 2;
 		boolean fixed = true;
 
-		TestUtils.runTest(tests, minimumUtilization, maximumUtilization, utilizationIncrement, n, nsets, tmin, tmax, criticality,
-				DC, CF, CP, delta, fixed);
-		
-		assertTrue(amcmax.score() <= amctight.score() && amcmax.score() <= exact.score() && amcmax.score() <= ubhl.score());
+		TestUtils.runTest(tests, minimumUtilization, maximumUtilization, utilizationIncrement, n, nsets, tmin, tmax,
+				criticality, DC, CF, CP, delta, fixed, null);
+
+		assertTrue(amcmax.score() <= amctight.score() && amcmax.score() <= exact.score()
+				&& amcmax.score() <= ubhl.score());
 		assertTrue(amctight.score() <= exact.score() && amctight.score() <= ubhl.score());
 		assertTrue(exact.score() <= ubhl.score());
 	}
-	
-	//@Test
+
+	// @Test
 	public void testDominanceWithTheBestAssignmentFloating() {
 		List<TestItem> tests = new ArrayList<TestItem>();
 		TestItem ubhl = new TestItem(new FeasibilityTestUBHL(), new PriorityAssignmentDM());
-		TestItem amcmax = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCmax()), new PriorityAssignmentOPA(new
-				ResponseTimeAMCmax()));
+		TestItem amcmax = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCmax()),
+				new PriorityAssignmentOPA(new ResponseTimeAMCmax()));
 		TestItem exact = new TestItem(new FeasibilityTestEfficientExact(), new PriorityAssignmentNOPA());
 		TestItem amctight = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCTight()),
 				new PriorityAssignmentNOPA());
@@ -196,22 +233,23 @@ public class ValidityTests {
 		double delta = utilizationIncrement / 2;
 		boolean fixed = false;
 
-		TestUtils.runTest(tests, minimumUtilization, maximumUtilization, utilizationIncrement, n, nsets, tmin, tmax, criticality,
-				DC, CF, CP, delta, fixed);
-		
-		assertTrue(amcmax.score() <= amctight.score() && amcmax.score() <= exact.score() && amcmax.score() <= ubhl.score());
+		TestUtils.runTest(tests, minimumUtilization, maximumUtilization, utilizationIncrement, n, nsets, tmin, tmax,
+				criticality, DC, CF, CP, delta, fixed, null);
+
+		assertTrue(amcmax.score() <= amctight.score() && amcmax.score() <= exact.score()
+				&& amcmax.score() <= ubhl.score());
 		assertTrue(amctight.score() <= exact.score() && amctight.score() <= ubhl.score());
 		assertTrue(exact.score() <= ubhl.score());
 	}
-	
-	//@Test
+
+	// @Test
 	public void testAMCMaxWithNOPA() throws IOException, PythonExecutionException {
 		List<TestItem> tests = new ArrayList<TestItem>();
-		TestItem amcmaxnopa = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCmax()), new PriorityAssignmentNOPA());
+		TestItem amcmaxnopa = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCmax()),
+				new PriorityAssignmentNOPA());
 		TestItem amcmaxopa = new TestItem(new FeasibilityTestEfficientExact(), new PriorityAssignmentNOPA());
 		tests.add(amcmaxnopa);
 		tests.add(amcmaxopa);
-
 
 		double minimumUtilization = 0.1;
 		double maximumUtilization = 0.9;
@@ -227,18 +265,18 @@ public class ValidityTests {
 		double delta = utilizationIncrement / 2;
 		boolean fixed = true;
 
-		TestUtils.runTest(tests, minimumUtilization, maximumUtilization, utilizationIncrement, n, nsets, tmin, tmax, criticality,
-				DC, CF, CP, delta, fixed);
-		
+		TestUtils.runTest(tests, minimumUtilization, maximumUtilization, utilizationIncrement, n, nsets, tmin, tmax,
+				criticality, DC, CF, CP, delta, fixed, null);
+
 		assertTrue(amcmaxnopa.score() <= amcmaxopa.score());
 	}
-	
-	//@Test
+
+	// @Test
 	public void testDominanceWithTheBestAssignmentFloatingForThreeTasks() {
 		List<TestItem> tests = new ArrayList<TestItem>();
 		TestItem ubhl = new TestItem(new FeasibilityTestUBHL(), new PriorityAssignmentDM());
-		TestItem amcmax = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCmax()), new PriorityAssignmentOPA(new
-				ResponseTimeAMCmax()));
+		TestItem amcmax = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCmax()),
+				new PriorityAssignmentOPA(new ResponseTimeAMCmax()));
 		TestItem exact = new TestItem(new FeasibilityTestEfficientExact(), new PriorityAssignmentNOPA());
 		TestItem amctight = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCTight()),
 				new PriorityAssignmentNOPA());
@@ -261,20 +299,21 @@ public class ValidityTests {
 		double delta = utilizationIncrement / 2;
 		boolean fixed = false;
 
-		TestUtils.runTest(tests, minimumUtilization, maximumUtilization, utilizationIncrement, n, nsets, tmin, tmax, criticality,
-				DC, CF, CP, delta, fixed);
-		
-		assertTrue(amcmax.score() <= amctight.score() && amcmax.score() <= exact.score() && amcmax.score() <= ubhl.score());
+		TestUtils.runTest(tests, minimumUtilization, maximumUtilization, utilizationIncrement, n, nsets, tmin, tmax,
+				criticality, DC, CF, CP, delta, fixed, null);
+
+		assertTrue(amcmax.score() <= amctight.score() && amcmax.score() <= exact.score()
+				&& amcmax.score() <= ubhl.score());
 		assertTrue(amctight.score() <= exact.score() && amctight.score() <= ubhl.score());
 		assertTrue(exact.score() <= ubhl.score());
 	}
-	
-	//@Test
+
+	// @Test
 	public void testDominanceWithTheBestAssignmentFloatingForEightTasks() {
 		List<TestItem> tests = new ArrayList<TestItem>();
 		TestItem ubhl = new TestItem(new FeasibilityTestUBHL(), new PriorityAssignmentDM());
-		TestItem amcmax = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCmax()), new PriorityAssignmentOPA(new
-				ResponseTimeAMCmax()));
+		TestItem amcmax = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCmax()),
+				new PriorityAssignmentOPA(new ResponseTimeAMCmax()));
 		TestItem exact = new TestItem(new FeasibilityTestEfficientExact(), new PriorityAssignmentNOPA());
 		TestItem amctight = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCTight()),
 				new PriorityAssignmentNOPA());
@@ -297,20 +336,21 @@ public class ValidityTests {
 		double delta = utilizationIncrement / 2;
 		boolean fixed = false;
 
-		TestUtils.runTest(tests, minimumUtilization, maximumUtilization, utilizationIncrement, n, nsets, tmin, tmax, criticality,
-				DC, CF, CP, delta, fixed);
-		
-		assertTrue(amcmax.score() <= amctight.score() && amcmax.score() <= exact.score() && amcmax.score() <= ubhl.score());
+		TestUtils.runTest(tests, minimumUtilization, maximumUtilization, utilizationIncrement, n, nsets, tmin, tmax,
+				criticality, DC, CF, CP, delta, fixed, null);
+
+		assertTrue(amcmax.score() <= amctight.score() && amcmax.score() <= exact.score()
+				&& amcmax.score() <= ubhl.score());
 		assertTrue(amctight.score() <= exact.score() && amctight.score() <= ubhl.score());
 		assertTrue(exact.score() <= ubhl.score());
 	}
-	
-	//@Test
+
+	// @Test
 	public void testDominanceWithTheBestAssignmentConstrainedWithLargerPeriods() {
 		List<TestItem> tests = new ArrayList<TestItem>();
 		TestItem ubhl = new TestItem(new FeasibilityTestUBHL(), new PriorityAssignmentDM());
-		TestItem amcmax = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCmax()), new PriorityAssignmentOPA(new
-				ResponseTimeAMCmax()));
+		TestItem amcmax = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCmax()),
+				new PriorityAssignmentOPA(new ResponseTimeAMCmax()));
 		TestItem exact = new TestItem(new FeasibilityTestEfficientExact(), new PriorityAssignmentNOPA());
 		TestItem amctight = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCTight()),
 				new PriorityAssignmentNOPA());
@@ -333,20 +373,21 @@ public class ValidityTests {
 		double delta = utilizationIncrement / 2;
 		boolean fixed = true;
 
-		TestUtils.runTest(tests, minimumUtilization, maximumUtilization, utilizationIncrement, n, nsets, tmin, tmax, criticality,
-				DC, CF, CP, delta, fixed);
-		
-		assertTrue(amcmax.score() <= amctight.score() && amcmax.score() <= exact.score() && amcmax.score() <= ubhl.score());
+		TestUtils.runTest(tests, minimumUtilization, maximumUtilization, utilizationIncrement, n, nsets, tmin, tmax,
+				criticality, DC, CF, CP, delta, fixed, null);
+
+		assertTrue(amcmax.score() <= amctight.score() && amcmax.score() <= exact.score()
+				&& amcmax.score() <= ubhl.score());
 		assertTrue(amctight.score() <= exact.score() && amctight.score() <= ubhl.score());
 		assertTrue(exact.score() <= ubhl.score());
 	}
-	
-	@Test
+
+	// @Test
 	public void testExactRevision() throws IOException, PythonExecutionException {
 		List<TestItem> tests = new ArrayList<TestItem>();
 		TestItem ubhl = new TestItem(new FeasibilityTestUBHL(), new PriorityAssignmentDM());
-		TestItem amcmax = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCmax()), new PriorityAssignmentOPA(new
-				ResponseTimeAMCmax()));
+		TestItem amcmax = new TestItem(new FeasibilityTestResponseTime(new ResponseTimeAMCmax()),
+				new PriorityAssignmentOPA(new ResponseTimeAMCmax()));
 		TestItem exact = new TestItem(new FeasibilityTestEfficientExact(), new PriorityAssignmentNOPA());
 		TestItem exactWrong = new TestItem(new FeasibilityTestEfficientExactWrong(), new PriorityAssignmentNOPA());
 
@@ -369,22 +410,22 @@ public class ValidityTests {
 		double delta = utilizationIncrement / 2;
 		boolean fixed = true;
 
-		TestUtils.runTest(tests, minimumUtilization, maximumUtilization, utilizationIncrement, n, nsets, tmin, tmax, criticality,
-				DC, CF, CP, delta, fixed);
-		
+		TestUtils.runTest(tests, minimumUtilization, maximumUtilization, utilizationIncrement, n, nsets, tmin, tmax,
+				criticality, DC, CF, CP, delta, fixed, null);
+
 		assertTrue(amcmax.score() <= exact.score() && exact.score() <= ubhl.score());
 		assertTrue(exactWrong.score() <= ubhl.score());
-		
+
 		System.out.println(exact.score());
 		System.out.println(exactWrong.score());
-		
+
 		Set<MCTaskSet> wrong = new HashSet<MCTaskSet>(exactWrong.schedulableSets);
 		wrong.removeAll(new HashSet<MCTaskSet>(exact.schedulableSets));
-		
+
 		MCTaskSet one = null;
-		
+
 		int random = new Random().nextInt(wrong.size());
-		
+
 		int i = 0;
 		for (MCTaskSet set : wrong) {
 			if (i++ == random) {
@@ -392,26 +433,23 @@ public class ValidityTests {
 				break;
 			}
 		}
-		
+
 		for (MCTaskSet set : wrong) {
 			System.out.println(set);
 		}
-		
+
 		System.out.println(one);
-		
+
 		System.out.println(wrong.size());
-		
+
 		one = new PriorityAssignmentNOPA().assign(one);
-		
+
 		System.out.println(one);
-		
+
 		System.out.println(new FeasibilityTestEfficientExact().isFeasible(one));
 		System.out.println(new FeasibilityTestEfficientExactWrong().isFeasible(one));
 		System.out.println(wrong.size());
 
 	}
-
-
-
 
 }

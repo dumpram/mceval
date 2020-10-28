@@ -32,5 +32,10 @@ public class PriorityAssignmentCrMPO extends PriorityAssignment {
  		
  		return new MCTaskSet(tasksSorted);
 	}
+	
+	@Override
+	public String toString() {
+		return "CrMPO";
+	}
 
 }

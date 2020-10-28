@@ -48,5 +48,10 @@ public class ResponseTimeClassic implements IResponseTime {
 
 		return forExport.substring(0, forExport.length() - 1) + " = " + R;
 	}
+	
+	@Override
+	public String toString() {
+		return null;
+	}
 
 }

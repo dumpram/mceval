@@ -43,7 +43,7 @@ public class ExactTests {
 		boolean fixed = true;
 
 		Plot result = TestUtils.runTest(tests, minimumUtilization, maximumUtilization, utilizationIncrement, n, nsets,
-				tmin, tmax, criticality, DC, CF, CP, delta, fixed);
+				tmin, tmax, criticality, DC, CF, CP, delta, fixed, null);
 
 
 		assertTrue(exact.score() == exact.score());

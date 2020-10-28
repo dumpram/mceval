@@ -35,10 +35,10 @@ public class PriorityAssignmentOPA extends PriorityAssignment {
 
 		for (int j = n - 1; j >= 0; j--) {
 			unassigned = true;
-			System.out.println(n - j  + ". step (j = " + (j + 1) + "):");
+			//System.out.println(n - j  + ". step (j = " + (j + 1) + "):");
 			for (int i = 0; i < j + 1; i++) {
 				forExport.reorder(i, j);
-				System.out.println("i = " + i + " :" + responseTime.printResponseTime(j, getPriorityOrdering(set, forExport), forExport));
+				//System.out.println("i = " + i + " :" + responseTime.printResponseTime(j, getPriorityOrdering(set, forExport), forExport));
 				if (testOPA(i, j, forExport, responseTime) && unassigned) {
 					unassigned = false;
 					break;

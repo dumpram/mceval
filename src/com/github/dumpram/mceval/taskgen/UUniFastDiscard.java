@@ -95,13 +95,13 @@ public class UUniFastDiscard {
 				List<Integer> wcets = new ArrayList<Integer>();
 				for (int k = 0; k < criticality; k++) {
 					int c = (int) Math.ceil(p_sets.get(i).get(j) * (1.0 * u_sets.get(i).get(j)));
-					//if (cr_sets.get(i).get(j) == 1) {
+					if (cr_sets.get(i).get(j) == 1) {
 						wcets.add(
 								(int) c * (int) Math.pow(CF, k));
-					//} else {
-						//wcets.add(
-							//	(int) Math.ceil(p_sets.get(i).get(j) * (1.0 * u_sets.get(i).get(j)) * Math.pow(CF, 0)));
-					//}
+					} else {
+						wcets.add(
+								(int) Math.ceil(p_sets.get(i).get(j) * (1.0 * u_sets.get(i).get(j)) * Math.pow(CF, 0)));
+					}
 				}
 				if (cr_sets.get(i).get(j) == 1 && wcets.get(1) < 2 * wcets.get(0)) {
 					System.out.println(wcets.get(0) + " " + wcets.get(1) + " " + p_sets.get(i).get(j) + " " + u_sets.get(i).get(j));

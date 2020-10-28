@@ -73,20 +73,20 @@ public class FeasibilityTestEfficientExactWrong implements IFeasibilityTest {
 			s.sp = sp++;
 			unexploredStack.remove(unexploredStack.size() - 1);
 			List<MCState> successorStates = getSuccessorStates(s, state, set, k);
-			s.successorStates.addAll(successorStates);
+			//s.successorStates.addAll(successorStates);
 			for (MCState _s : successorStates) {
 				TaskState tk = _s.taskStates.get(k);
 				MCTask task = set.getTasks().get(k);
 				if (tk.c == 0) {
 					Robs = Math.max(Robs, task.getT() - tk.p);
 					if (Robs == Rsuff) {
-						System.out.println(state.draw());
+						//System.out.println(state.draw());
 						return true;
 					} else {
 						continue;
 					}
 				} else if (tk.c > tk.q) {
-					System.out.println(state.draw());
+					//System.out.println(state.draw());
 					return false;
 				} else if (isPruned(_s, set, k, state, Robs)) {
 					continue;
@@ -97,7 +97,7 @@ public class FeasibilityTestEfficientExactWrong implements IFeasibilityTest {
 			}
 		}
 		
-		System.out.println(state.draw());
+		//System.out.println(state.draw());
 		
 		return true;
 	}

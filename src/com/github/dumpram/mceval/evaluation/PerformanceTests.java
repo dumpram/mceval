@@ -55,7 +55,7 @@ public class PerformanceTests {
 		boolean fixed = false;
 
 		Plot result = TestUtils.runTest(tests, minimumUtilization, maximumUtilization, utilizationIncrement, n, nsets, tmin, tmax, criticality,
-				DC, CF, CP, delta, fixed);
+				DC, CF, CP, delta, fixed, null);
 		
 //		assertTrue(amcmax.score() <= exact.score() && amcmax.score() <= ubhl.score());
 ////		assertTrue(amctight.score() <= exact.score() && amctight.score() <= ubhl.score());

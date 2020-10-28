@@ -24,6 +24,8 @@ public class TestItem {
 	
 	private long executionTime = 0;
 	
+	private long lastExecutionTime = 0;
+	
 	public TestItem(IFeasibilityTest feasibilityTest, PriorityAssignment priorityAssignment) {
 		super();
 		this.feasibilityTest = feasibilityTest;
@@ -42,7 +44,8 @@ public class TestItem {
 		testNumber++;
 		long start = System.currentTimeMillis();
 		boolean isFeasible = feasibilityTest.isFeasible(set);
-		executionTime += System.currentTimeMillis() - start;
+		lastExecutionTime = System.currentTimeMillis() - start;
+		executionTime += lastExecutionTime;
 		return isFeasible;
 	}
 	
@@ -50,11 +53,18 @@ public class TestItem {
 		return 1.0 * executionTime / testNumber;
 	}
 	
+	public long getLastExecutionTime() {
+		return lastExecutionTime;
+	}
+	
 	@Override
 	public String toString() {
-		String forExport = feasibilityTest.toString();
+		String forExport = "";
+		if (feasibilityTest.toString() != null) {
+			forExport += feasibilityTest.toString() + "+";
+		}
 		if (!priorityAssignment.toString().isEmpty()) {
-			forExport += "+" + priorityAssignment.toString();
+			forExport += priorityAssignment.toString();
 		}
 		return forExport;
 	}
