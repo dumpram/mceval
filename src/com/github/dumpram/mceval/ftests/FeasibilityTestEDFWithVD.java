@@ -6,7 +6,7 @@ import com.github.dumpram.mceval.models.MCTaskSet;
 public class FeasibilityTestEDFWithVD implements IFeasibilityTest {
 	
 	public boolean isFeasible(MCTaskSet set) {
-		double x = set.getUtilizationLOHI() / (1 - set.getUtilizationLOLO());
+		double x = set.getUtilizationHILO() / (1 - set.getUtilizationLOLO());
 		
 		if (x * set.getUtilizationLOLO() + set.getUtilizationHIHI() <= 1) {
 			return true;
